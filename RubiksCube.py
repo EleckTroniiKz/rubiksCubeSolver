@@ -13,7 +13,6 @@ dict = {
 }
 """
 
-
 class Faces:
     def __init__(self, color, tiles):
         self.color = color
@@ -160,26 +159,180 @@ class Movemaker:
     def __init__(self):
         pass
 
+    def twist(self, currentSide, inverted = False):
+        if not inverted:
+            tempRed = currentSide[0][0]
+            currentSide[0][0] = currentSide[2][0]
+            currentSide[0][2], tempRed = tempRed, currentSide[0][2]
+            currentSide[2][2], tempRed = tempRed, currentSide[2][2] 
+            currentSide[0][1] = tempRed
+
+            currentSide[0][1], tempRed = currentSide[1][0], currentSide[0][1] 
+            currentSide[1][0] = currentSide[2][1]
+            currentSide[2][1] = currentSide[1][2]
+            currentSide[1][2] = tempRed
+        else:
+            pass
+        return currentSide
+
     def make_left(self, cube, inverted = False):
         #transform the cube as if a left move was made
-        pass
+        if not inverted:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[1][0], cube.white[2][0]
+            cube.white[0][0], cube.white[1][0], cube.white[2][0] = cube.green[0][0], cube.green[1][0], cube.green[2][0]
+
+            cube.green[0][0], cube.green[1][0], cube.green[2][0] = cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0]
+
+            cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0] = cube.blue[0][0], cube.blue[1][0], cube.blue[2][0]
+
+            cube.blue[0][0], cube.blue[1][0], cube.blue[2][0] = whiteA, whiteB, whiteC
+
+            cube.red = self.twist(cube.red)
+            pass
+        else:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[1][0], cube.white[2][0]
+            cube.white[0][0], cube.white[1][0], cube.white[2][0] = cube.blue[0][0], cube.blue[1][0], cube.blue[2][0]
+        
+            cube.green[0][0], cube.green[1][0], cube.green[2][0] = whiteA, whiteB, whiteC
+
+            cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0] = cube.green[0][0], cube.green[1][0], cube.green[2][0]
+
+            cube.blue[0][0], cube.blue[1][0], cube.blue[2][0] = cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0]
+
+            cube.red = self.twist(cube.red, True)
+            pass
+        return cube
 
     def make_right(self, cube, inverted = False):
         #transform the cube as if a right move was made
-        pass
+        if not inverted:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[1][0], cube.white[2][0]
+            cube.white[0][0], cube.white[1][0], cube.white[2][0] = cube.blue[0][0], cube.blue[1][0], cube.blue[2][0]
+
+            cube.green[0][0], cube.green[1][0], cube.green[2][0] = whiteA, whiteB, whiteC
+
+            cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0] = cube.green[0][0], cube.green[1][0], cube.green[2][0]
+
+            cube.blue[0][0], cube.blue[1][0], cube.blue[2][0] = cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0]
+            
+            cube.orange = self.twist(cube.orange)
+        else:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[1][0], cube.white[2][0]
+            cube.white[0][0], cube.white[1][0], cube.white[2][0] = cube.green[0][0], cube.green[1][0], cube.green[2][0]
+            
+            cube.green[0][0], cube.green[1][0], cube.green[2][0] = cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0]
+
+            cube.yellow[0][0], cube.yellow[1][0], cube.yellow[2][0] = cube.blue[0][0], cube.blue[1][0], cube.blue[2][0]
+
+            cube.blue[0][0], cube.blue[1][0], cube.blue[2][0] = whiteA, whiteB, whiteC
+            
+            cube.orange = self.twist(cube.orange, True)
+        return cube
 
     def make_up(self, cube, inverted = False):
         #transform the cube as if a upper move was made
-        pass
+        if not inverted:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[0][1], cube.white[0][2]
+            cube.white[0][0], cube.white[0][1], cube.white[0][2] = cube.orange[0][0], cube.orange[0][1], cube.orange[0][2]
+            
+            cube.orange[0][0], cube.orange[0][1], cube.orange[0][2] = cube.yellow[0][0], cube.yellow[0][1], cube.yellow[0][2]
+
+            cube.yellow[0][0], cube.yellow[0][1], cube.yellow[0][2] = cube.red[0][0], cube.red[0][1], cube.red[0][2]
+
+            cube.red[0][0], cube.red[0][1], cube.red[0][2] = whiteA, whiteB, whiteC
+            
+            cube.green = self.twist(cube.green)
+            
+        else:
+            whiteA, whiteB, whiteC = cube.white[0][0], cube.white[0][1], cube.white[0][2]
+            cube.white[0][0], cube.white[0][1], cube.white[0][2] = cube.red[0][0], cube.red[0][1], cube.red[0][2]
+            
+            cube.orange[0][0], cube.orange[0][1], cube.orange[0][2] = whiteA, whiteB, whiteC
+
+            cube.yellow[0][0], cube.yellow[0][1], cube.yellow[0][2] = cube.orange[0][0], cube.orange[0][1], cube.orange[0][2]
+
+            cube.red[0][0], cube.red[0][1], cube.red[0][2] = cube.yellow[0][0], cube.yellow[0][1], cube.yellow[0][2]
+            
+            cube.green = self.twist(cube.green, True)
+        return cube
 
     def make_down(self, cube, inverted = False):
         #transform the cube as if a down move was made
-        pass
+        if not inverted:
+            whiteA, whiteB, whiteC = cube.white[2][0], cube.white[2][1], cube.white[2][2]
+            cube.white[2][0], cube.white[2][1], cube.white[2][2] = cube.red[2][0], cube.red[2][1], cube.red[2][2]
+            
+            cube.orange[2][0], cube.orange[2][1], cube.orange[2][2] = whiteA, whiteB, whiteC
+
+            cube.yellow[2][0], cube.yellow[2][1], cube.yellow[2][2] = cube.orange[2][0], cube.orange[2][1], cube.orange[2][2]
+
+            cube.red[2][0], cube.red[2][1], cube.red[2][2] = cube.yellow[2][0], cube.yellow[2][1], cube.yellow[2][2]
+            
+            cube.blue = self.twist(cube.blue)
+            
+        else:
+            whiteA, whiteB, whiteC = cube.white[2][0], cube.white[2][1], cube.white[2][2]
+            cube.white[2][0], cube.white[2][1], cube.white[2][2] = cube.orange[2][0], cube.orange[2][1], cube.orange[2][2]
+            
+            cube.orange[2][0], cube.orange[2][1], cube.orange[2][2] = cube.yellow[2][0], cube.yellow[2][1], cube.yellow[2][2]
+
+            cube.yellow[2][0], cube.yellow[2][1], cube.yellow[2][2] = cube.red[2][0], cube.red[2][1], cube.red[2][2]
+
+            cube.red[2][0], cube.red[2][1], cube.red[2][2] = whiteA, whiteB, whiteC
+            
+            cube.blue = self.twist(cube.blue, True)
+        return cube
 
     def make_back(self, cube, inverted = False):
         #transform the cube as if a back move was made
-        pass
+        if not inverted:
+            greenA, greenB, greenC = cube.green[0][0], cube.green[0][1], cube.green[0][2]
+            cube.green[0][0], cube.green[0][1], cube.green[0][2] = cube.orange[0][2], cube.orange[1][12], cube.orange[2][2]
+            
+            cube.orange[2][0], cube.orange[2][1], cube.orange[2][2] = cube.blue[2][0], cube.blue[2][1], cube.blue[2][2]
+
+            cube.blue[2][0], cube.blue[2][1], cube.blue[2][2] = cube.red[0][0], cube.red[1][0], cube.red[2][0]
+
+            cube.red[2][0], cube.red[2][1], cube.red[2][2] = greenA, greenB, greenC
+            
+            cube.yellow = self.twist(cube.yellow)
+            
+        else:
+            greenA, greenB, greenC = cube.green[0][0], cube.green[0][1], cube.green[0][2]
+            cube.green[0][0], cube.green[0][1], cube.green[0][2] = cube.red[0][0], cube.red[1][0], cube.red[2][0]
+            
+            cube.orange[2][0], cube.orange[2][1], cube.orange[2][2] = greenA, greenB, greenC
+
+            cube.blue[2][0], cube.blue[2][1], cube.blue[2][2] = cube.orange[0][2], cube.orange[1][12], cube.orange[2][2]
+
+            cube.red[2][0], cube.red[2][1], cube.red[2][2] = cube.blue[2][0], cube.blue[2][1], cube.blue[2][2]
+            
+            cube.yellow = self.twist(cube.yellow)
+        return cube
 
     def make_front(self, cube, inverted = False):
         #transform the cube as if a front move was made
-        pass
+        if not inverted:
+            greenA, greenB, greenC = cube.green[2][0], cube.green[2][1], cube.green[2][2]
+            cube.green[2][0], cube.green[2][1], cube.green[2][2] = cube.red[2][2], cube.red[1][2], cube.red[0][2]
+            
+            cube.orange[0][0], cube.orange[1][0], cube.orange[2][0] = greenA, greenB, greenC
+
+            cube.blue[0][0], cube.blue[0][1], cube.blue[0][2] = cube.orange[2][0], cube.orange[1][0], cube.orange[0][0]
+
+            cube.red[0][2], cube.red[1][2], cube.red[2][2] = cube.blue[0][0], cube.blue[0][1], cube.blue[0][2]
+            
+            cube.white = self.twist(cube.white)
+            
+        else:
+            greenA, greenB, greenC = cube.green[2][0], cube.green[2][1], cube.green[2][2]
+            cube.green[2][0], cube.green[2][1], cube.green[2][2] = cube.orange[2][0], cube.orange[1][0], cube.orange[0][0]
+            
+            cube.orange[0][0], cube.orange[1][0], cube.orange[2][0] = cube.blue[0][0], cube.blue[0][1], cube.blue[0][2]
+
+            cube.blue[0][0], cube.blue[0][1], cube.blue[0][2] = cube.red[2][2], cube.red[1][2], cube.red[0][2]
+
+            cube.red[0][2], cube.red[1][2], cube.red[2][2] = greenA, greenB, greenC
+            
+            cube.white = self.twist(cube.white)
+        return cube
