@@ -239,6 +239,7 @@ class Movemaker:
         return cube
 
     #has to be checked
+    #has to be checked
     def make_up(self, cube, inverted = False):
         #transform the cube as if a upper move was made
         if not inverted:
