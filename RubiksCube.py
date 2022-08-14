@@ -1,5 +1,6 @@
 import enum
 import random
+from re import X
 import time
 import tkinter as tk
 
@@ -169,6 +170,32 @@ class RubiksCubeSolver:
 class Movemaker:
     def __init__(self):
         pass
+
+    def sort_move(self, moveLetter, cube):
+        if moveLetter == "R":
+            self.make_right(cube)
+        elif moveLetter == "r":
+            self.make_right(cube, inverted = True)
+        elif moveLetter == "D":
+            self.make_down(cube)
+        elif moveLetter == "d":
+            self.make_down(cube, inverted = True)
+        elif moveLetter == "F":
+            self.make_front(cube)
+        elif moveLetter == "f":
+            self.make_front(cube, inverted = True)
+        elif moveLetter == "B":
+            self.make_back(cube)
+        elif moveLetter == "b":
+            self.make_back(inverted = True)
+        elif moveLetter == "L":
+            self.make_left(cube)
+        elif moveLetter == "l":
+            self.make_left(cube, inverted = True) 
+        elif moveLetter == "U":
+            self.make_up(cube)
+        elif moveLetter == "u":
+            self.make_up(cube, inverted = True)
 
     def twist(self, currentSide, inverted = False):
         if not inverted:
@@ -391,60 +418,87 @@ class Tester:
         #print_cube(transformedCube)
 
 class UserInterface:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.canvas = tk.Canvas(self.root, width=1090, height=1000)
+    def __init__(self, root, mover):
+        self.root = root
+        self.mover = mover
+        self.create_move_buttons()    
 
-        self.buttonLeft = tk.Button(self.root, text="L", width="5")
-        self.buttonLeft.grid(row=10, column=0, padx="5", pady="5", sticky="ew")
-        self.buttonleft = tk.Button(self.root, text="l", width="5")
-        self.buttonleft.grid(row=11, column=0, padx="5", pady="5", sticky="ew")
-        self.buttonRight = tk.Button(self.root, text="R", width="5")
-        self.buttonRight.grid(row=10, column=1, padx="5", pady="5", sticky="ew")
-        self.buttonright = tk.Button(self.root, text="r", width="5")
-        self.buttonright.grid(row=11, column=1, padx="5", pady="5", sticky="ew")
-        self.buttonUp = tk.Button(self.root, text="U", width="5")
-        self.buttonUp.grid(row=10, column=2, padx="5", pady="5", sticky="ew")
-        self.buttonup = tk.Button(self.root, text = "u", width="5")
-        self.buttonup.grid(row=11, column=2, padx="5", pady="5", sticky="ew")
-        self.buttonDown = tk.Button(self.root, text="D", width="5")
-        self.buttonDown.grid(row=10, column=3, padx="5", pady="5", sticky="ew")
-        self.buttondown = tk.Button(self.root, text="d", width="5")
-        self.buttondown.grid(row=11, column=3, padx="5", pady="5", sticky="ew")
-        self.buttonFront = tk.Button(self.root, text="F", width="5")
-        self.buttonFront.grid(row=10, column=4, padx="5", pady="5", sticky="ew")
-        self.buttonfront = tk.Button(self.root, text="f", width="5")
-        self.buttonfront.grid(row=11, column=4, padx="5", pady="5", sticky="ew")
-        self.buttonBack = tk.Button(self.root, text="B", width="5")
-        self.buttonBack.grid(row=10, column=4, padx="5", pady="5", sticky="ew")
-        self.buttonback = tk.Button(self.root, text="b", width="5")
-        self.buttonback.grid(row=11, column=4, padx="5", pady="5", sticky="ew")
+    def create_move_buttons(self):
+        self.L_button = tk.Button(self.root, text="L", command=lambda: self.moveButtonHandler('  L  '))
+        self.L_button.place(x=25, y=250)
+        self.l_button = tk.Button(self.root, text="l", command=lambda: self.moveButtonHandler('  l  '))
+        self.l_button.place(x=25, y=275)
 
-        self.root.mainloop()
+        self.R_button = tk.Button(self.root, text="R", command=lambda: self.moveButtonHandler('  R  '))
+        self.R_button.place(x=40, y=250)
+        self.r_button = tk.Button(self.root, text="r", command=lambda: self.moveButtonHandler('  r  '))
+        self.r_button.place(x=40, y=275)
+
+        self.U_button = tk.Button(self.root, text="U", command=lambda: self.moveButtonHandler('  U  '))
+        self.U_button.place(x=55, y=250)
+        self.u_button = tk.Button(self.root, text="u", command=lambda: self.moveButtonHandler('  u  '))
+        self.u_button.place(x=55, y=275) 
+
+        self.F_button = tk.Button(self.root, text="F", command=lambda: self.moveButtonHandler('  F  '))
+        self.F_button.place(x=70, y=250)
+        self.f_button = tk.Button(self.root, text="f", command=lambda: self.moveButtonHandler('  f  '))
+        self.f_button.place(x=70, y=275)
+
+        self.D_button = tk.Button(self.root, text="D", command=lambda: self.moveButtonHandler('  D  '))
+        self.D_button.place(x=85, y=250)
+        self.d_button = tk.Button(self.root, text="d", command=lambda: self.moveButtonHandler('  d  '))
+        self.d_button.place(x=85, y=275)
+
+        self.B_button = tk.Button(self.root, text="B", command=lambda: self.moveButtonHandler('  B  '))
+        self.B_button.place(x=100, y=250)
+        self.b_button = tk.Button(self.root, text="b", command=lambda: self.moveButtonHandler('  b  '))
+        self.b_button.place(x=100, y=275)
+        pass
 
     def get_color(self, color):
-        return "white" if color == "W" else "red" if color == "R" else "blue" if color == "B" else "yellow" if color == "Y" else "green" if color == "G" else "orange"
+        return 'white' if color == "W" else 'red' if color == "R" else 'blue' if color == "B" else 'yellow' if color == "Y" else 'green' if color == "G" else 'orange'
+
+    def print_cube(self, cube):
+        self.print_face(cube["green"], 47, 0)
+        self.print_face(cube["red"], 0, 75)
+        self.print_face(cube["white"], 47, 75)
+        self.print_face(cube["orange"], 94, 75)
+        self.print_face(cube["blue"], 47, 150)
+        self.print_face(cube["yellow"], 47, 225)
 
     def print_face(self, colors, gridX, gridY):
-        self.canvas.create_rectangle(gridX, gridY, gridX+10, gridY+10, fill=self.get_color(colors[0][0]))
-        self.canvas.create_rectangle(gridX+11, gridY, gridX+21, gridY+10, fill=self.get_color(colors[0][1]))
-        self.canvas.create_rectangle(gridX+22, gridY, gridX+32, gridY+10, fill=self.get_color(colors[0][2]))
-        self.canvas.create_rectangle(gridX, gridY+11, gridX+10, gridY+21, fill=self.get_color(colors[1][0]))
-        self.canvas.create_rectangle(gridX+11, gridY+11, gridX+21, gridY+21, fill=self.get_color(colors[1][1]))
-        self.canvas.create_rectangle(gridX+22, gridY+11, gridX+32, gridY+21, fill=self.get_color(colors[1][2]))
-        self.canvas.create_rectangle(gridX, gridY+22, gridX+10, gridY+32, fill=self.get_color(colors[2][0]))
-        self.canvas.create_rectangle(gridX+11, gridY+22, gridX+21, gridY+32, fill=self.get_color(colors[2][1]))
-        self.canvas.create_rectangle(gridX+22, gridY+22, gridX+32, gridY+32, fill=self.get_color(colors[2][2]))
+        tL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+        tL.place(x=gridX, y=gridY)
 
-    def moveButtonHandler(self):
-        pass
+        tM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        tM.place(x=gridX+15, y=gridY)
 
-    def updateColors(self, colors):
-        pass
+        tR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        tR.place(x=gridX+30, y=gridY)
+
+        mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+        mL.place(x=gridX, y=gridY+25)
+
+        mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        mM.place(x=gridX+15, y=gridY+25)
+
+        mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        mR.place(x=gridX+30, y=gridY+25)
+
+        bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+        bL.place(x=gridX, y=gridY+50)
+
+        bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        bM.place(x=gridX+15, y=gridY+50)
+
+        bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        bR.place(x=gridX+30, y=gridY+50)
+        
+    def moveButtonHandler(self, move):
+        self.mover.sort_move(move)
 
 
-
-def setup():
+def setupTesterInConsole():
     white = [["W" for row in range(3)] for line in range(3)]
     red = [["R" for row in range(3)] for line in range(3)]
     blue = [["B" for row in range(3)] for line in range(3)]
@@ -465,5 +519,11 @@ def setup():
 
     tester.test_Transformation('R', cube_constallation)
 
-baum = UserInterface()
-baum.print_face([["W" for row in range(3)] for line in range(3)], 0, 0)
+def setup_main_program():
+    root = tk.Tk()
+    root.geometry('1500x800')
+    interface = UserInterface(root, 3)
+
+    cube_solver = RubiksCubeSolver()
+
+    root.mainloop()
