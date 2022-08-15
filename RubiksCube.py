@@ -173,29 +173,29 @@ class Movemaker:
 
     def sort_move(self, moveLetter, cube):
         if moveLetter == "R":
-            self.make_right(cube)
+            return self.make_right(cube)
         elif moveLetter == "r":
-            self.make_right(cube, inverted = True)
+            return self.make_right(cube, inverted = True)
         elif moveLetter == "D":
-            self.make_down(cube)
+            return self.make_down(cube)
         elif moveLetter == "d":
-            self.make_down(cube, inverted = True)
+            return self.make_down(cube, inverted = True)
         elif moveLetter == "F":
-            self.make_front(cube)
+            return self.make_front(cube)
         elif moveLetter == "f":
-            self.make_front(cube, inverted = True)
+            return self.make_front(cube, inverted = True)
         elif moveLetter == "B":
-            self.make_back(cube)
+            return self.make_back(cube)
         elif moveLetter == "b":
-            self.make_back(inverted = True)
+            return self.make_back(inverted = True)
         elif moveLetter == "L":
-            self.make_left(cube)
+            return self.make_left(cube)
         elif moveLetter == "l":
-            self.make_left(cube, inverted = True) 
+            return self.make_left(cube, inverted = True) 
         elif moveLetter == "U":
-            self.make_up(cube)
+            return self.make_up(cube)
         elif moveLetter == "u":
-            self.make_up(cube, inverted = True)
+            return self.make_up(cube, inverted = True)
 
     def twist(self, currentSide, inverted = False):
         if not inverted:
@@ -418,41 +418,43 @@ class Tester:
         #print_cube(transformedCube)
 
 class UserInterface:
-    def __init__(self, root, mover):
+    def __init__(self, root, mover, cube):
         self.root = root
         self.mover = mover
+        self.cube = cube
         self.create_move_buttons()    
+        self.print_cube(self.cube)
 
     def create_move_buttons(self):
-        self.L_button = tk.Button(self.root, text="L", command=lambda: self.moveButtonHandler('  L  '))
-        self.L_button.place(x=25, y=250)
-        self.l_button = tk.Button(self.root, text="l", command=lambda: self.moveButtonHandler('  l  '))
-        self.l_button.place(x=25, y=275)
+        self.L_button = tk.Button(self.root, text="  L  ", command=lambda: self.moveButtonHandler('L'))
+        self.L_button.place(x=25, y=450)
+        self.l_button = tk.Button(self.root, text="  l  ", command=lambda: self.moveButtonHandler('l'))
+        self.l_button.place(x=25, y=475)
 
-        self.R_button = tk.Button(self.root, text="R", command=lambda: self.moveButtonHandler('  R  '))
-        self.R_button.place(x=40, y=250)
-        self.r_button = tk.Button(self.root, text="r", command=lambda: self.moveButtonHandler('  r  '))
-        self.r_button.place(x=40, y=275)
+        self.R_button = tk.Button(self.root, text="  R  ", command=lambda: self.moveButtonHandler('R'))
+        self.R_button.place(x=60, y=450)
+        self.r_button = tk.Button(self.root, text="  r  ", command=lambda: self.moveButtonHandler('r'))
+        self.r_button.place(x=60, y=475)
 
-        self.U_button = tk.Button(self.root, text="U", command=lambda: self.moveButtonHandler('  U  '))
-        self.U_button.place(x=55, y=250)
-        self.u_button = tk.Button(self.root, text="u", command=lambda: self.moveButtonHandler('  u  '))
-        self.u_button.place(x=55, y=275) 
+        self.U_button = tk.Button(self.root, text="  U  ", command=lambda: self.moveButtonHandler('U'))
+        self.U_button.place(x=95, y=450)
+        self.u_button = tk.Button(self.root, text="  u  ", command=lambda: self.moveButtonHandler('u'))
+        self.u_button.place(x=95, y=475) 
 
-        self.F_button = tk.Button(self.root, text="F", command=lambda: self.moveButtonHandler('  F  '))
-        self.F_button.place(x=70, y=250)
-        self.f_button = tk.Button(self.root, text="f", command=lambda: self.moveButtonHandler('  f  '))
-        self.f_button.place(x=70, y=275)
+        self.F_button = tk.Button(self.root, text="  F  ", command=lambda: self.moveButtonHandler('F'))
+        self.F_button.place(x=130, y=450)
+        self.f_button = tk.Button(self.root, text="  f  ", command=lambda: self.moveButtonHandler('f'))
+        self.f_button.place(x=130, y=475)
 
-        self.D_button = tk.Button(self.root, text="D", command=lambda: self.moveButtonHandler('  D  '))
-        self.D_button.place(x=85, y=250)
-        self.d_button = tk.Button(self.root, text="d", command=lambda: self.moveButtonHandler('  d  '))
-        self.d_button.place(x=85, y=275)
+        self.D_button = tk.Button(self.root, text="  D  ", command=lambda: self.moveButtonHandler('D'))
+        self.D_button.place(x=165, y=450)
+        self.d_button = tk.Button(self.root, text="  d  ", command=lambda: self.moveButtonHandler('d'))
+        self.d_button.place(x=165, y=475)
 
-        self.B_button = tk.Button(self.root, text="B", command=lambda: self.moveButtonHandler('  B  '))
-        self.B_button.place(x=100, y=250)
-        self.b_button = tk.Button(self.root, text="b", command=lambda: self.moveButtonHandler('  b  '))
-        self.b_button.place(x=100, y=275)
+        self.B_button = tk.Button(self.root, text="  B  ", command=lambda: self.moveButtonHandler('B'))
+        self.B_button.place(x=200, y=450)
+        self.b_button = tk.Button(self.root, text="  b  ", command=lambda: self.moveButtonHandler('b'))
+        self.b_button.place(x=200, y=475)
         pass
 
     def get_color(self, color):
@@ -495,7 +497,8 @@ class UserInterface:
         bR.place(x=gridX+30, y=gridY+50)
         
     def moveButtonHandler(self, move):
-        self.mover.sort_move(move)
+        self.cube = self.mover.sort_move(move, self.cube)
+        self.print_cube(self.cube)
 
 
 def setupTesterInConsole():
@@ -520,10 +523,27 @@ def setupTesterInConsole():
     tester.test_Transformation('R', cube_constallation)
 
 def setup_main_program():
+
+    white = [["W" for row in range(3)] for line in range(3)]
+    red = [["R" for row in range(3)] for line in range(3)]
+    blue = [["B" for row in range(3)] for line in range(3)]
+    green = [["G" for row in range(3)] for line in range(3)]
+    yellow = [["Y" for row in range(3)] for line in range(3)]
+    orange = [["O" for row in range(3)] for line in range(3)]
+
+    cube_constallation = {
+        'white': white,
+        'red': red,
+        'blue': blue,
+        'green': green,
+        'yellow':yellow,
+        'orange': orange
+    }
+
     root = tk.Tk()
     root.geometry('1500x800')
-    interface = UserInterface(root, 3)
-
-    cube_solver = RubiksCubeSolver()
+    interface = UserInterface(root, Movemaker(), cube_constallation)
 
     root.mainloop()
+
+setup_main_program()
