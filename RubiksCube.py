@@ -198,19 +198,26 @@ class Movemaker:
             return self.make_up(cube, inverted = True)
 
     def twist(self, currentSide, inverted = False):
+        TopLeft, TopRight, BottomLeft, BottomRight = currentSide[0][0], currentSide[0][2], currentSide[2][0], currentSide[2][2]
+        TopMid, MidLeft, MidRight, BottomMid = currentSide[0][1], currentSide[1][0], currentSide[1][2], currentSide[2][1]
         if not inverted:
-            tempRed = currentSide[0][0]
-            currentSide[0][0] = currentSide[2][0]
-            currentSide[0][2], tempRed = tempRed, currentSide[0][2]
-            currentSide[2][2], tempRed = tempRed, currentSide[2][2] 
-            currentSide[0][1] = tempRed
-
-            currentSide[0][1], tempRed = currentSide[1][0], currentSide[0][1] 
-            currentSide[1][0] = currentSide[2][1]
-            currentSide[2][1] = currentSide[1][2]
-            currentSide[1][2] = tempRed
+            currentSide[0][0] = BottomLeft
+            currentSide[0][1] = MidLeft
+            currentSide[0][2] = TopLeft
+            currentSide[1][0] = BottomMid
+            currentSide[1][2] = TopMid
+            currentSide[2][0] = BottomRight
+            currentSide[2][1] = MidRight
+            currentSide[2][2] = TopRight
         else:
-            pass
+            currentSide[0][0] = TopRight
+            currentSide[0][1] = MidRight
+            currentSide[0][2] = BottomRight
+            currentSide[1][0] = TopMid
+            currentSide[1][2] = BottomMid
+            currentSide[2][0] = TopLeft
+            currentSide[2][1] = MidLeft
+            currentSide[2][2] = BottomLeft
         return currentSide
 
     def make_left(self, cube, inverted = False):
