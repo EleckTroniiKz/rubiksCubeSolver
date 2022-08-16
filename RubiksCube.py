@@ -187,7 +187,7 @@ class Movemaker:
         elif moveLetter == "B":
             return self.make_back(cube)
         elif moveLetter == "b":
-            return self.make_back(inverted = True)
+            return self.make_back(cube, inverted = True)
         elif moveLetter == "L":
             return self.make_left(cube)
         elif moveLetter == "l":
@@ -265,44 +265,42 @@ class Movemaker:
             cube["orange"] = self.twist(cube["orange"], True)
         return cube
 
-    #has to be checked
-    #has to be checked
     def make_up(self, cube, inverted = False):
         #transform the cube as if a upper move was made
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
             
-            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2]
+            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
 
-            cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2] = cube["red"][0][0], cube["red"][0][1], cube["red"][0][2]
+            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["red"][0][0], cube["red"][0][1], cube["red"][0][2]
 
             cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = whiteA, whiteB, whiteC
             
             cube["green"] = self.twist(cube["green"])
-            
         else:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["red"][0][0], cube["red"][0][1], cube["red"][0][2]
 
-            cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2]
+            cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
 
-            cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
+            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
 
             cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = whiteA, whiteB, whiteC
             
             cube["green"] = self.twist(cube["green"], True)
         return cube
 
+#yellow wrong
     def make_down(self, cube, inverted = False):
         #transform the cube as if a down move was made
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][2][0], cube["white"][2][1], cube["white"][2][2]
             cube["white"][2][0], cube["white"][2][1], cube["white"][2][2] = cube["red"][2][0], cube["red"][2][1], cube["red"][2][2]
             
-            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
+            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2]
 
-            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2]
+            cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2] = cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2]
             
             cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = whiteA, whiteB, whiteC
 
@@ -325,27 +323,27 @@ class Movemaker:
         #transform the cube as if a back move was made
         if not inverted:
             greenA, greenB, greenC = cube["green"][0][0], cube["green"][0][1], cube["green"][0][2]
-            cube["green"][0][0], cube["green"][0][1], cube["green"][0][2] = cube["orange"][0][2], cube["orange"][1][12], cube["orange"][2][2]
+            cube["green"][0][0], cube["green"][0][1], cube["green"][0][2] = cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2]
             
-            cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2]
+            cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2] = cube["blue"][2][2], cube["blue"][2][1], cube["blue"][2][0]
 
             cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["red"][0][0], cube["red"][1][0], cube["red"][2][0]
 
-            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = greenA, greenB, greenC
+            cube["red"][0][0], cube["red"][1][0], cube["red"][2][0] = greenA, greenB, greenC
             
             cube["yellow"] = self.twist(cube["yellow"])
             
         else:
             greenA, greenB, greenC = cube["green"][0][0], cube["green"][0][1], cube["green"][0][2]
-            cube["green"][0][0], cube["green"][0][1], cube["green"][0][2] = cube["red"][0][0], cube["red"][1][0], cube["red"][2][0]
-
-            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2]
-
-            cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["orange"][0][2], cube["orange"][1][12], cube["orange"][2][2]
+            cube["green"][0][0], cube["green"][0][1], cube["green"][0][2] = cube["red"][2][0], cube["red"][1][0], cube["red"][0][0]
             
-            cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = greenA, greenB, greenC
+            cube["red"][2][0], cube["red"][1][0], cube["red"][0][0] = cube["blue"][2][2], cube["blue"][2][1], cube["blue"][2][0]
+
+            cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2]
+
+            cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2] = greenA, greenB, greenC
             
-            cube["yellow"] = self.twist(cube["yellow"])
+            cube["yellow"] = self.twist(cube["yellow"], inverted=True)
         return cube
 
     def make_front(self, cube, inverted = False):
@@ -361,7 +359,7 @@ class Movemaker:
             cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0] = greenA, greenB, greenC
             
             cube["white"] = self.twist(cube["white"])
-            
+            return cube
         else:
             greenA, greenB, greenC = cube["green"][2][0], cube["green"][2][1], cube["green"][2][2]
             cube["green"][2][0], cube["green"][2][1], cube["green"][2][2] = cube["orange"][2][0], cube["orange"][1][0], cube["orange"][0][0]
@@ -478,26 +476,27 @@ class UserInterface:
         tR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
         tR.place(x=gridX+30, y=gridY)
 
-        mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+        mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][0]))
         mL.place(x=gridX, y=gridY+25)
 
-        mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][1]))
         mM.place(x=gridX+15, y=gridY+25)
 
-        mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][2]))
         mR.place(x=gridX+30, y=gridY+25)
 
-        bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+        bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][0]))
         bL.place(x=gridX, y=gridY+50)
 
-        bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][1]))
         bM.place(x=gridX+15, y=gridY+50)
 
-        bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][2]))
         bR.place(x=gridX+30, y=gridY+50)
         
     def moveButtonHandler(self, move):
         self.cube = self.mover.sort_move(move, self.cube)
+        self.print_cube(self.cube)
         self.print_cube(self.cube)
 
 
