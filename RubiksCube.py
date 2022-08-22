@@ -14,6 +14,11 @@ dict = {
     ...
 }
 """
+class CubieLinks:
+    def __init__(self):
+        self.links = {}
+
+
 
 class Faces:
     def __init__(self, color, tiles):
@@ -172,6 +177,11 @@ class Movemaker:
         pass
 
     def sort_move(self, moveLetter, cube):
+        a=self.make_right(cube)
+        b=self.make_up(a)
+        c=self.make_right(b, inverted=True)
+        return self.make_up(c, inverted=True)
+
         if moveLetter == "R":
             return self.make_right(cube)
         elif moveLetter == "r":
@@ -278,9 +288,9 @@ class Movemaker:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
             
-            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
+            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][2][2], cube["yellow"][2][1], cube["yellow"][2][1]
 
-            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["red"][0][0], cube["red"][0][1], cube["red"][0][2]
+            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["red"][0][2], cube["red"][0][1], cube["red"][0][0]
 
             cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = whiteA, whiteB, whiteC
             
@@ -289,9 +299,9 @@ class Movemaker:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["red"][0][0], cube["red"][0][1], cube["red"][0][2]
 
-            cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
+            cube["red"][0][0], cube["red"][0][1], cube["red"][0][2] = cube["yellow"][2][2], cube["yellow"][2][1], cube["yellow"][2][0]
 
-            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
+            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["orange"][0][2], cube["orange"][0][1], cube["orange"][0][0]
 
             cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = whiteA, whiteB, whiteC
             
