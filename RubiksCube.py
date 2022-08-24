@@ -174,13 +174,9 @@ class RubiksCubeSolver:
 
 class Movemaker:
     def __init__(self):
-        pass
+        self.lastMove = 0
 
     def sort_move(self, moveLetter, cube):
-        a=self.make_right(cube)
-        b=self.make_up(a)
-        c=self.make_right(b, inverted=True)
-        return self.make_up(c, inverted=True)
 
         if moveLetter == "R":
             return self.make_right(cube)
@@ -288,7 +284,7 @@ class Movemaker:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
             
-            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][2][2], cube["yellow"][2][1], cube["yellow"][2][1]
+            cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2] = cube["yellow"][2][2], cube["yellow"][2][1], cube["yellow"][2][0]
 
             cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["red"][0][2], cube["red"][0][1], cube["red"][0][0]
 
@@ -308,16 +304,15 @@ class Movemaker:
             cube["green"] = self.twist(cube["green"], True)
         return cube
 
-#yellow wrong
     def make_down(self, cube, inverted = False):
         #transform the cube as if a down move was made
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][2][0], cube["white"][2][1], cube["white"][2][2]
             cube["white"][2][0], cube["white"][2][1], cube["white"][2][2] = cube["red"][2][0], cube["red"][2][1], cube["red"][2][2]
             
-            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2]
+            cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = cube["yellow"][0][2], cube["yellow"][0][1], cube["yellow"][0][0]
 
-            cube["yellow"][0][0], cube["yellow"][0][1], cube["yellow"][0][2] = cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2]
+            cube["yellow"][0][2], cube["yellow"][0][1], cube["yellow"][0][0] = cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2]
             
             cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = whiteA, whiteB, whiteC
 
@@ -327,9 +322,9 @@ class Movemaker:
             whiteA, whiteB, whiteC = cube["white"][2][0], cube["white"][2][1], cube["white"][2][2]
             cube["white"][2][0], cube["white"][2][1], cube["white"][2][2] = cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2]
             
-            cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2]
+            cube["orange"][2][0], cube["orange"][2][1], cube["orange"][2][2] = cube["yellow"][0][2], cube["yellow"][0][1], cube["yellow"][0][0]
 
-            cube["yellow"][2][0], cube["yellow"][2][1], cube["yellow"][2][2] = cube["red"][2][0], cube["red"][2][1], cube["red"][2][2]
+            cube["yellow"][0][2], cube["yellow"][0][1], cube["yellow"][0][0] = cube["red"][2][0], cube["red"][2][1], cube["red"][2][2]
 
             cube["red"][2][0], cube["red"][2][1], cube["red"][2][2] = whiteA, whiteB, whiteC
             
@@ -346,7 +341,7 @@ class Movemaker:
 
             cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["red"][0][0], cube["red"][1][0], cube["red"][2][0]
 
-            cube["red"][0][0], cube["red"][1][0], cube["red"][2][0] = greenA, greenB, greenC
+            cube["red"][2][0], cube["red"][1][0], cube["red"][0][0] = greenA, greenB, greenC
             
             cube["yellow"] = self.twist(cube["yellow"])
             
@@ -356,7 +351,7 @@ class Movemaker:
             
             cube["red"][2][0], cube["red"][1][0], cube["red"][0][0] = cube["blue"][2][2], cube["blue"][2][1], cube["blue"][2][0]
 
-            cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2]
+            cube["blue"][2][0], cube["blue"][2][1], cube["blue"][2][2] = cube["orange"][2][2], cube["orange"][1][2], cube["orange"][0][2]
 
             cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2] = greenA, greenB, greenC
             
@@ -378,16 +373,16 @@ class Movemaker:
             cube["white"] = self.twist(cube["white"])
             return cube
         else:
-            greenA, greenB, greenC = cube["green"][2][0], cube["green"][2][1], cube["green"][2][2]
-            cube["green"][2][0], cube["green"][2][1], cube["green"][2][2] = cube["orange"][2][0], cube["orange"][1][0], cube["orange"][0][0]
+            greenA, greenB, greenC = cube["green"][2][2], cube["green"][2][1], cube["green"][2][0]
+            cube["green"][2][0], cube["green"][2][1], cube["green"][2][2] = cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0]
             
-            cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0] = cube["blue"][0][0], cube["blue"][0][1], cube["blue"][0][2]
+            cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0] = cube["blue"][0][2], cube["blue"][0][1], cube["blue"][0][0]
 
-            cube["blue"][0][0], cube["blue"][0][1], cube["blue"][0][2] = cube["red"][2][2], cube["red"][1][2], cube["red"][0][2]
+            cube["blue"][0][0], cube["blue"][0][1], cube["blue"][0][2] = cube["red"][0][2], cube["red"][1][2], cube["red"][2][2]
 
             cube["red"][0][2], cube["red"][1][2], cube["red"][2][2] = greenA, greenB, greenC
             
-            cube["white"] = self.twist(cube["white"])
+            cube["white"] = self.twist(cube["white"], inverted=True)
         return cube
 
 class Tester:
