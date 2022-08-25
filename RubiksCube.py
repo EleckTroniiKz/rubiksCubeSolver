@@ -1,11 +1,8 @@
 import enum
 import random
-from re import X
 import time
 import tkinter as tk
 from mover import Movemaker
-
-#Think about using a dictionary for the cube sides, so every color is a key and every key contains a list with Color strings per indes
 
 """
 dict = {
