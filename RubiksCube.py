@@ -1,9 +1,9 @@
 import enum
-from fcntl import F_SEAL_SEAL
 import random
 from re import X
 import time
 import tkinter as tk
+from mover import Movemaker
 
 #Think about using a dictionary for the cube sides, so every color is a key and every key contains a list with Color strings per indes
 
@@ -243,6 +243,7 @@ class UserInterface:
         self.cube = cube
         self.create_move_buttons()    
         self.print_cube(self.cube)
+        self.color_cycle = ['G', 'W', 'R', 'O', 'B', 'Y']
 
     def create_move_buttons(self):
         self.L_button = tk.Button(self.root, text="  L  ", command=lambda: self.moveButtonHandler('L'))
@@ -287,46 +288,55 @@ class UserInterface:
     def get_color(self, color):
         return 'white' if color == "W" else 'red' if color == "R" else 'blue' if color == "B" else 'yellow' if color == "Y" else 'green' if color == "G" else 'orange'
 
-    def print_cube(self, cube):
-        self.print_face(cube["green"], 47, 0)
-        self.print_face(cube["red"], 0, 75)
-        self.print_face(cube["white"], 47, 75)
-        self.print_face(cube["orange"], 94, 75)
-        self.print_face(cube["blue"], 47, 150)
-        self.print_face(cube["yellow"], 47, 225)
+    def changeColor(self, currentColor, currentSide, x, y):
+        currentIndex = self.color_cycle.index(currentColor)
+        nextIndex = currentIndex+1
+        if nextIndex == len(self.color_cycle):
+            nextIndex = 0
+        self.cube[currentSide][x][y] = self.color_cycle[nextIndex]
+        self.print_cube(self.cube)
+        
 
-    def print_face(self, colors, gridX, gridY):
-        tL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]))
+    def print_cube(self, cube):
+        self.print_face(cube["green"], 47, 0, "green")
+        self.print_face(cube["red"], 0, 75, "red")
+        self.print_face(cube["white"], 47, 75, "white")
+        self.print_face(cube["orange"], 94, 75, "orange")
+        self.print_face(cube["blue"], 47, 150, "blue")
+        self.print_face(cube["yellow"], 47, 225, "yellow")
+
+    def print_face(self, colors, gridX, gridY, side):
+        tL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]), command=lambda: self.changeColor(colors[0][0], side, 0, 0))
         tL.place(x=gridX, y=gridY)
 
-        tM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]))
+        tM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]), command=lambda: self.changeColor(colors[0][1], side, 0, 1))
         tM.place(x=gridX+15, y=gridY)
 
-        tR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]))
+        tR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]), command=lambda: self.changeColor(colors[0][2], side, 0, 2))
         tR.place(x=gridX+30, y=gridY)
 
-        mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][0]))
+        mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][0]), command=lambda: self.changeColor(colors[1][0], side, 1, 0))
         mL.place(x=gridX, y=gridY+25)
 
         mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][1]))
         mM.place(x=gridX+15, y=gridY+25)
 
-        mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][2]))
+        mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][2]), command=lambda: self.changeColor(colors[1][2], side, 1, 2))
         mR.place(x=gridX+30, y=gridY+25)
 
-        bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][0]))
+        bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][0]), command=lambda: self.changeColor(colors[2][0], side, 2, 0))
         bL.place(x=gridX, y=gridY+50)
 
-        bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][1]))
+        bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][1]), command=lambda: self.changeColor(colors[2][1], side, 2, 1))
         bM.place(x=gridX+15, y=gridY+50)
 
-        bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][2]))
+        bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][2]), command=lambda: self.changeColor(colors[2][2], side, 2, 2))
         bR.place(x=gridX+30, y=gridY+50)
         
     def moveButtonHandler(self, move):
         self.cube = self.mover.sort_move(move, self.cube)
         self.print_cube(self.cube)
-        self.print_cube(self.cube)
+        
 
 
 def setupTesterInConsole():
@@ -369,7 +379,7 @@ def setup_main_program():
     }
 
     root = tk.Tk()
-    root.geometry('1500x800')
+    root.geometry('600x600')
     interface = UserInterface(root, Movemaker(), cube)
 
     root.mainloop()
