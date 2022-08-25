@@ -197,7 +197,6 @@ class Movemaker:
             cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0] = greenA, greenB, greenC
             
             cube["white"] = self.twist(cube["white"])
-            return cube
         else:
             greenA, greenB, greenC = cube["green"][2][2], cube["green"][2][1], cube["green"][2][0]
             cube["green"][2][0], cube["green"][2][1], cube["green"][2][2] = cube["orange"][0][0], cube["orange"][1][0], cube["orange"][2][0]
@@ -209,4 +208,4 @@ class Movemaker:
             cube["red"][0][2], cube["red"][1][2], cube["red"][2][2] = greenA, greenB, greenC
             
             cube["white"] = self.twist(cube["white"], inverted=True)
-        return 
+        return cube
