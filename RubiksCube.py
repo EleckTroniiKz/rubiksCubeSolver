@@ -92,7 +92,6 @@ class RubiksCubeSolver:
                 # yellow cross has been created at this point
                 return
 
-
     def orientate_top_edges(self):
         # move edges so one is correct
         # do algorithm
@@ -109,8 +108,70 @@ class RubiksCubeSolver:
         elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "O":
             # erst blau orange switch, dann porrange grün switch, dann blau orange switch
             pass
-
                 
+    def check_white_cross(self):
+        return (self.cube["white"][0][1] == self.cube["white"][1][0] == self.cube["white"][1][2] == self.cube["white"][2][1] == "W")
+
+    def check_side(self, side):
+        return (self.cube[side][0][0] == self.cube[side][0][1] == self.cube[side][0][2] == self.cube[side][1][0] == self.cube[side][1][2] == self.cube[side][2][0] == self.cube[side][2][1] == self.cube[side][2][2])
+
+    def solve_white_cross(self):
+        #solve white edges
+        colors = ["blue", "red", "green", "yellow", "orange"]
+        white_has_cross = self.check_white_cross()
+        index = 0
+        while not white_has_cross:
+            white_in_face = self.has_white_in_face(colors[index])
+            if len(white_in_face) > 0:
+                for indices in white_in_face:
+                    if self.is_edge_piece(indices):
+                        #permute them to white
+                        break
+            index = (index+1) if not (index+1) == 5 else 0
+            white_has_cross = self.check_white_cross()
+            if white_has_cross:
+                break
+            
+        #orientate white edges
+        red_oriented = (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W")
+        while not red_oriented:
+            self.cube = self.mover.make_front(self.cube)
+            red_oriented = (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W")
+
+        blue_oriented = (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W")
+        orange_oriented = (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W")
+        if blue_oriented and not orange_oriented:
+            # do one algo to switch orange and green
+            pass
+        elif not blue_oriented and orange_oriented:
+            # do two algs to switch blue and green
+            pass
+        elif not blue_oriented and not orange_oriented:
+            # do one algo to switch orange and blue
+            pass
+
+        
+            
+        
+        # solve white corners
+        white_is_full = self.check_side("white")    
+        while not white_is_full:
+            white_in_face = self.has_white_in_face(colors[index])
+            if len(white_in_face) > 0:
+                for indices in white_in_face:
+                    if not self.is_edge_piece(indices):
+                        #permute them to white
+                        break
+            index = (index+1) if not (index+1) == 5 else 0
+            white_is_full = self.check_side("white")
+            if white_is_full:
+                break
+
+        #orient white corners
+        pass
+
+
+
     def start_solve(self):
         # find white edge pieces
         # move edge pieces to white face
@@ -334,8 +395,6 @@ class UserInterface:
         self.cube = self.mover.sort_move(move, self.cube)
         self.print_cube(self.cube)
         
-
-
 def setupTesterInConsole():
     white = [["W" for row in range(3)] for line in range(3)]
     red = [["R" for row in range(3)] for line in range(3)]
