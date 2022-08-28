@@ -38,6 +38,7 @@ class RubiksCubeSolver:
         self.startTime = None
         self.endTime = None
     
+    
     def get_cross_phase(self):
         
         if self.cube["yellow"][0][1] == self.cube["yellow"][2][1] == self.cube["yellow"][1][0] == self.cube["yellow"][1][2] == "Y":
@@ -125,7 +126,139 @@ class RubiksCubeSolver:
             if len(white_in_face) > 0:
                 for indices in white_in_face:
                     if self.is_edge_piece(indices):
-                        #permute them to white
+                        if colors[index] == "blue":
+                            if indices == (0,1):
+                                #2D
+                                #check if top free. if not move
+                                #B
+                                #l
+                                #D
+                                #L
+                                pass
+                            elif indices == (1,0):
+                                #check if red side is free
+                                # if yes l
+                                # if no check if blue is free
+                                # L
+                                # B
+                                # l
+                                # same as top technically
+                                pass
+                            elif indices == (1,2):
+                                # check if orange is free
+                                # if yes R
+                                # if no check if blue is free
+                                # r
+                                # b
+                                # R
+                                # same as top technically
+                                pass
+                            elif indices == (2,1):
+                                # check if blue free
+                                # if yes
+                                # b
+                                # l
+                                # D
+                                # L
+                                pass
+                            pass
+                        elif colors[index] == "red":
+                            if indices == (0,1):
+                                #check if green free
+                                # if yes u
+                                # if no check if red free
+                                # if yes U B 2L
+                                pass
+                            elif indices == (1,0):
+                                # if red free
+                                # b
+                                # u
+                                # L
+                                # U
+                                # else F til red free
+                                pass
+                            elif indices == (1,2):
+                                #2L and then liek 1,0
+                                pass
+                            elif indices == (2,1):
+                                # L and then like 1,0 and 1,2
+                                pass
+                            pass
+                        elif colors[index] == "green":
+                            if indices == (0,1):
+                                #check if green free
+                                # B
+                                # L
+                                # u
+                                # l
+                                pass
+                            elif indices == (1,0):
+                                # if green free
+                                # l
+                                # b
+                                # L
+                                # 2U
+                                pass
+                            elif indices == (1,2):
+                                # if green free
+                                # R
+                                # B
+                                # r
+                                # 2U
+                                pass
+                            elif indices == (2,1):
+                                # if green free
+                                # 2U
+                                # and then like 0,1
+                                pass
+                        elif colors[index] == "yellow":
+                            if indices == (0,1):
+                                #check if blue is free
+                                # 2D
+                                # if not free do F
+                                pass
+                            elif indices == (1,0):
+                                # if red free
+                                # 2D
+                                # if not free do F
+                                pass
+                            elif indices == (1,2):
+                                # if orange free
+                                # 2D
+                                # if not free do F
+                                pass
+                            elif indices == (2,1):
+                                # if green free
+                                # 2D
+                                # if not free do F
+                                pass
+                        else:
+                            if indices == (0,1):
+                                #check if green is free
+                                # U
+                                # if not free do F
+                                pass
+                            elif indices == (1,0):
+                                # if green free
+                                # R
+                                # U
+                                # if blue free
+                                # r
+                                # d
+                                pass
+                            elif indices == (1,2):
+                                # if green free
+                                # r
+                                # U
+                                # if blue free
+                                # R
+                                # d
+                                pass
+                            elif indices == (2,1):
+                                # if blue free
+                                # d
+                                # if not free do F
+                                pass
                         break
             index = (index+1) if not (index+1) == 5 else 0
             white_has_cross = self.check_white_cross()
