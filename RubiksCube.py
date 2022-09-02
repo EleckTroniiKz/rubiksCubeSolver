@@ -118,6 +118,7 @@ class RubiksCubeSolver:
         white_has_cross = self.check_white_cross()
         index = 0
         solved = 0
+        # solves white cross
         while not white_has_cross:
             white_in_face = self.has_white_in_face(self.cube[colors[index]])
             if len(white_in_face) > 0:
@@ -459,7 +460,7 @@ class RubiksCubeSolver:
                                     self.cube = self.mover.make_right(self.cube, inverted = True)
                                     self.moveString += " r "
                                     self.cube = self.mover.make_front(self.cube)
-                                    self.moveSTring += " F "
+                                    self.moveString += " F "
                             elif indices == (2,1):
                                 self.cube = self.mover.make_up(self.cube)
                                 self.cube = self.mover.make_up(self.cube)
@@ -689,29 +690,84 @@ class RubiksCubeSolver:
             index = (index+1) if not (index+1) == 5 else 0
             white_has_cross = self.check_white_cross()
             if white_has_cross:
-                print(self.moveString)
-                sys.exit()
                 break
             
         #orientate white edges
-        red_oriented = (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W")
-        while not red_oriented:
+        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
             self.cube = self.mover.make_front(self.cube)
-            red_oriented = (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W")
+            self.moveString += " F "
 
-        blue_oriented = (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W")
-        orange_oriented = (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W")
-        if blue_oriented and not orange_oriented:
-            # do one algo to switch orange and green
+        # blue edge is correct but orange edge is wrong
+        if (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            self.cube = self.mover.make_right(self.cube)
+            self.cube = self.mover.make_right(self.cube)
+            self.moveString += " 2R "
+            self.cube = self.mover.make_back(self.cube)
+            self.moveString += " B "
+            self.cube = self.mover.make_up(self.cube)
+            self.cube = self.mover.make_up(self.cube)
+            self.moveString += " 2U "
+            self.cube = self.mover.make_back(self.cube, inverted = True)
+            self.moveString += " b "
+            self.cube = self.mover.make_right(self.cube)
+            self.cube = self.mover.make_right(self.cube)
+            self.moveString += " 2R "
+        # blue is not oriented but orange is oriented
+        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            self.cube = self.mover.make_up(self.cube)
+            self.cube = self.mover.make_up(self.cube)
+            self.moveString += " 2U "
+            self.cube = self.mover.make_back(self.cube)
+            self.cube = self.mover.make_back(self.cube)
+            self.moveString += " 2B "
+            self.cube = self.mover.make_down(self.cube)
+            self.cube = self.mover.make_down(self.cube)
+            self.moveString += " 2D "
+            self.cube = self.mover.make_back(self.cube)
+            self.cube = self.mover.make_back(self.cube)
+            self.moveString += " 2B "
+            self.cube = self.mover.make_up(self.cube)
+            self.cube = self.mover.make_up(self.cube)
+            self.moveString += " 2U "
+        # blue is not oriented and orange is not oriented
+        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            if self.cube["blue"][0][1] == "G":
+                # orange has blue and green has orange
+                self.cube = self.mover.make_front(self.cube)
+                self.moveString += " F "
+                self.cube = self.mover.make_left(self.cube)
+                self.cube = self.mover.make_left(self.cube)
+                self.moveString += " 2L "
+                self.cube = self.mover.make_back(self.cube, inverted = True)
+                self.moveString += " b "
+                self.cube = self.mover.make_up(self.cube)
+                self.cube = self.mover.make_up(self.cube)
+                self.moveString += " 2U "
+                self.cube = self.mover.make_back(self.cube)
+                self.moveString += " B "
+                self.cube = self.mover.make_left(self.cube)
+                self.cube = self.mover.make_left(self.cube)
+                self.moveString += " 2L "
+            elif self.cube["blue"][0][1] == "O":
+                # orange has green and green has blue
+                self.cube = self.mover.make_front(self.cube, inverted = True)
+                self.moveString += " f "
+                self.cube = self.mover.make_down(self.cube)
+                self.cube = self.mover.make_down(self.cube)
+                self.moveString += " 2D "
+                self.cube = self.mover.make_back(self.cube, inverted = True)
+                self.moveString += " b "
+                self.cube = self.mover.make_left(self.cube)
+                self.cube = self.mover.make_left(self.cube)
+                self.moveString += " 2L "
+                self.cube = self.mover.make_back(self.cube)
+                self.moveString += " B "
+                self.cube = self.mover.make_down(self.cube)
+                self.cube = self.mover.make_down(self.cube)
+                self.moveString += " 2D "
             pass
-        elif not blue_oriented and orange_oriented:
-            # do two algs to switch blue and green
-            pass
-        elif not blue_oriented and not orange_oriented:
-            # do one algo to switch orange and blue
-            pass
-
-        
+        print(self.moveString)
+        sys.exit()
             
         """
         # solve white corners
