@@ -112,6 +112,23 @@ class RubiksCubeSolver:
     def check_side(self, side):
         return (self.cube[side][0][0] == self.cube[side][0][1] == self.cube[side][0][2] == self.cube[side][1][0] == self.cube[side][1][2] == self.cube[side][2][0] == self.cube[side][2][1] == self.cube[side][2][2] )
 
+    def execute_moves(self, move_list):
+        if len(move_list) == 1:
+            self.cube = self.executeMove(move_list[0])
+            self.moveString += " " + move_list[0] + " "
+        elif not len(move_list) == 0:
+            for move in move_list:
+                self.cube = self.executeMove(move)
+                self.moveString += " " + move + " "
+
+    def front_moves_handler(self, front_moves):
+        if front_moves == 1:
+            self.execute_moves(["f"])
+        elif front_moves == 2:
+            self.execute_moves(["2F"])
+        elif front_moves == 3:
+            self.execute_moves(["F"])
+
     def solve_white_cross(self):
         #solve white edges
         colors = ["blue", "red", "green", "yellow", "orange"]
@@ -127,563 +144,167 @@ class RubiksCubeSolver:
                         if colors[index] == "blue":
                             if indices == (0,1):
                                 if not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["d", "L", "B", "l", "2D"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["d", "l"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["D", "2D", "R"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
-                                pass
+                                    self.execute_moves(["F", "d", "R"])
                             elif indices == (1,0):
                                 if not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["L", "B", "l", "2D"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["l"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["2D", "R"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["F", "2D", "R"])
                             elif indices == (1,2):
                                 if not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_right(self.cube, inverted=True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_back(self.cube, inverted=True)
-                                    self.moveString += " b "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["r", "b", "R", "2D"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["R"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " 2D "
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["2D", "l"])
                                 else:
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["D", "F", "R"])
                             elif indices == (2,1):
                                 if not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube, inverted=True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["D", "L", "B", "l", "2D"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_down(self.cube, inverted=True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
+                                    self.execute_moves(["d", "R"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["D", "L", "d", "B", "2D"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_down(self.cube, inverted=True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " R "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
+                                    self.execute_moves(["F", "d", "R", "D"])
                         elif colors[index] == "red":
                             if indices == (0,1):
                                 if not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " U "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["U", "B", "u", "2L"])
                                 elif not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
+                                    self.execute_moves(["u"])
                                 elif not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["2L", "D", "2L"])
                                 else:
-                                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " 2B "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
+                                    self.execute_moves(["l", "2B", "L", "2R"])
                             elif indices == (1,0):
                                 if not self.cube["white"][1][0] == "W":
-                                    self.cube = self.make_back(self.cube, inverted = True)
-                                    self.moveString += " b "
-                                    self.cube = self.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
-                                    self.cube = self.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.make_up(self.cube, inverted = True)
-                                    self.moveString += " U "
+                                    self.execute_moves(["b", "u", "L", "U"])
                                 elif not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
-                                    self.cube = self.mover.make_left(self.cube, inverted =True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["L", "u", "l"])
                                 elif not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_left(self.cube, inverted =True)
-                                    self.moveString += " L "
+                                    self.execute_moves(["l", "D", "L"])
                                 else:
-                                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                                    self.moveString += " b "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " U "
-                                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
+                                    self.execute_moves(["b", "U", "r", "u"])
                             elif indices == (1,2):
-                                self.cube = self.mover.make_left(self.cube, inverted = True)
-                                self.moveString += " l "
-                                self.cube = self.mover.make_up(self.cube)
-                                self.moveString += " U "
-                                self.cube = self.mover.make_back(self.cube)
-                                self.moveString += " B "
-                                self.cube = self.mover.make_up(self.cube, inverted = True)
-                                self.moveString += " u "
-                                self.cube = self.mover.make_left(self.cube)
-                                self.cube = self.mover.make_left(self.cube)
-                                self.moveString += " 2L "
-                                    
+                                self.execute_moves(["l", "U", "B", "u", "2L"])    
                             elif indices == (2,1):
                                 if not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                                    self.moveString += " b "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["d", "b", "2L"])
                                 elif not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
+                                    self.execute_moves(["D"])
                                 elif not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["2L", "u", "2L"])
                                 else:
-                                    self.cube = self.mover.make_down(self.cube, inverted = True)
-                                    self.moveString += " d "
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
+                                    self.execute_moves(["d", "B", "D", "2R"])
                         elif colors[index] == "green":
                             if indices == (0,1):
                                 if not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_up(self.cube, inverted = True)
-                                    self.moveString += " u "
-                                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["B", "L", "u", "l"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_up(self.cube, inverted=True)
-                                    self.moveString += " u "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " U "
+                                    self.execute_moves(["u", "L", "U"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
-                                    self.cube = self.mover.make_right(self.cube, inverted=True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
+                                    self.execute_moves(["2U", "r", "2U"])
                                 else:
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " U "
-                                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                                    self.moveString += " l "
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " D "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
+                                    self.execute_moves(["U", "l", "D", "L"])
                             elif indices == (1,0):
                                 if not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                                    self.moveString += " l "
+                                    self.execute_moves(["f", "L", "F", "l"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
+                                    self.execute_moves(["L"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
-                                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
+                                    self.execute_moves(["2U", "r", "2U"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " F "
+                                    self.execute_moves(["F", "L", "F"])
                             elif indices == (1,2):
                                 if not self.cube["white"][0][1]:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
+                                    self.execute_moves(["F", "r", "f"])
                                 elif not self.cube["white"][1][2]:
-                                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                                    self.moveString += " r "
+                                    self.execute_moves(["r"])
                                 elif not self.cube["white"][1][0]:
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " L "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
+                                    self.execute_moves(["2U", "L", "2U"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
-                                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                                    self.moveString += " r "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
+                                    self.execute_moves(["f", "r", "F"])
                             elif indices == (2,1):
-                                self.cube = self.mover.make_up(self.cube)
-                                self.cube = self.mover.make_up(self.cube)
-                                self.moveString += " 2U "
-                                self.cube = self.mover.make_back(self.cube)
-                                self.moveString += " B "
-                                self.cube = self.mover.make_left(self.cube)
-                                self.moveString += " L "
-                                self.cube = self.mover.make_up(self.cube, inverted = True)
-                                self.moveString += " u "
-                                self.cube = self.mover.make_left(self.cube, inverted = True)
-                                self.moveString += " l "
+                                self.execute_moves(["2U", "B", "L", "u", "l"])
                         elif colors[index] == "yellow":
                             if indices == (0,1):
                                 if not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.cube = self.mover.make_down(self.cube)
-                                    self.moveString += " 2D "
+                                    self.execute_moves(["2D"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
+                                    self.execute_moves(["B", "2R"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["B", "2L"])
                                 else:
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " 2B "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
-                                
+                                    self.execute_moves(["2B", "2U"])
                             elif indices == (1,0):
                                 if not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["2L"])
                                 elif not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
+                                    self.execute_moves(["F", "2L", "f"])
                                 elif not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
+                                    self.execute_moves(["f", "2L", "F"])
                                 else:
-                                    self.cube == self.mover.make_front(self.cube)
-                                    self.cube == self.mover.make_front(self.cube)
-                                    self.moveString += " 2F "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
-                                    self.cube == self.mover.make_front(self.cube)
-                                    self.cube == self.mover.make_front(self.cube)
-                                    self.moveString+= " 2F "
+                                    self.execute_moves(["2F", "2L", "2F"])
                             elif indices == (1,2):
                                 if not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
+                                    self.execute_moves(["2R"])
                                 elif not self.cube["white"][2][1] == "W":
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
+                                    self.execute_moves(["f", "2R", "F"])
                                 elif not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " F "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
-                                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                                    self.moveString += " f "
+                                    self.execute_moves(["F", "2R", "f"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " 2F "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " 2F "
+                                    self.execute_moves(["2F", "2R", "2F"])
                             elif indices == (2,1):
                                 if not self.cube["white"][0][1] == "W":
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
+                                    self.execute_moves(["2U"])
                                 elif not self.cube["white"][1][0] == "W":
-                                    self.cube = self.mover.make_back(self.cube)
-                                    self.moveString += " B "
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.cube = self.mover.make_left(self.cube)
-                                    self.moveString += " 2L "
+                                    self.execute_moves(["B", "2L"])
                                 elif not self.cube["white"][1][2] == "W":
-                                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                                    self.moveString += " b "
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.cube = self.mover.make_right(self.cube)
-                                    self.moveString += " 2R "
+                                    self.execute_moves(["b", "2R"])
                                 else:
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " 2F "
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.cube = self.mover.make_up(self.cube)
-                                    self.moveString += " 2U "
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.cube = self.mover.make_front(self.cube)
-                                    self.moveString += " 2F "
+                                    self.execute_moves(["2F", "2U", "2F"])
                         else:
                                 if indices == (0,1):
                                     if not self.cube["white"][1][2] == "W":
-                                        self.cube = self.mover.make_front(self.cube, inverted = True)
-                                        self.moveString += " f "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " F "
+                                        self.execute_moves(["f", "U", "F"])
                                     elif not self.cube["white"][0][1] == "W":
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
+                                        self.execute_moves(["U"])
                                     elif not self.cube["white"][2][1] == "W":
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " 2F "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " 2F "
+                                        self.execute_moves(["2F", "U", "2F"])
                                     else:
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " F "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_front(self.cube, inverted = True)
-                                        self.moveString += " f "
+                                        self.execute_moves(["F", "U", "f"])
                                 elif indices == (1,0):
-                                        self.cube = self.mover.make_right(self.cube)
-                                        self.moveString += " R "
-                                        self.cube = self.mover.make_front(self.cube, inverted = True)
-                                        self.moveString += " f "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " F "
+                                    self.execute_moves(["R", "f", "U", "F"])
                                 elif indices == (1,2):
                                     if not self.cube["white"][1][2] == "W":
-                                        self.cube = self.mover.make_back(self.cube)
-                                        self.moveString += " B "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_right(self.cube, inverted = True)
-                                        self.moveString += " r "
-                                        self.cube = self.mover.make_up(self.cube, inverted = True)
-                                        self.moveString += " u "
+                                        self.execute_moves(["B", "U", "r", "u"])
                                     elif not self.cube["white"][0][1] == "W":
-                                        self.cube = self.mover.make_right(self.cube, inverted = True)
-                                        self.moveString += " r "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
-                                        self.cube = self.mover.make_right(self.cube)
-                                        self.moveString += " R "
+                                        self.execute_moves(["r", "U", "R"])
                                     elif not self.cube["white"][2][1] == "W":
-                                        self.cube = self.mover.make_right(self.cube)
-                                        self.moveString += " R "
-                                        self.cube = self.mover.make_down(self.cube, inverted = True)
-                                        self.moveString += " d "
-                                        self.cube = self.mover.make_right(self.cube, inverted = True)
-                                        self.moveString += " r "
+                                        self.execute_moves(["R", "d", "r"])
                                     else:
-                                        self.cube = self.mover.make_back(self.cube)
-                                        self.moveString += " B "
-                                        self.cube = self.mover.make_up(self.cube, inverted = True)
-                                        self.moveString += " u "
-                                        self.cube = self.mover.make_left(self.cube)
-                                        self.moveString += " L "
-                                        self.cube = self.mover.make_up(self.cube)
-                                        self.moveString += " U "
+                                        self.execute_moves(["B", "u", "L", "U"])
                                 elif indices == (2,1):
                                     if not self.cube["white"][1][2] == "W":
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " F "
-                                        self.cube = self.mover.make_down(self.cube, inverted = True)
-                                        self.moveString += " d "
-                                        self.cube = self.mover.make_front(self.cube, inverted = True)
-                                        self.moveString += " f "
+                                        self.execute_moves(["F", "d", "f"])
                                     elif not self.cube["white"][2][1] == "W":
-                                        self.cube = self.mover.make_down(self.cube, inverted = True)
-                                        self.moveString += " d "
+                                        self.execute_moves(["d"])
                                     elif not self.cube["white"][0][1] == "W":
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " 2F "
-                                        self.cube = self.mover.make_down(self.cube, inverted = True)
-                                        self.moveString += " d "
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " 2F "
+                                        self.execute_moves(["2F", "d", "2F"])
                                     else:
-                                        self.cube = self.mover.make_front(self.cube, inverted = True)
-                                        self.moveString += " f "
-                                        self.cube = self.mover.make_down(self.cube, inverted = True)
-                                        self.moveString += " d "
-                                        self.cube = self.mover.make_front(self.cube)
-                                        self.moveString += " F "
+                                        self.execute_moves(["f", "d", "F"])
                         solved += 1            
                         
             index = (index+1) if not (index+1) == 5 else 0
@@ -693,587 +314,186 @@ class RubiksCubeSolver:
             
         #orientate white edges
         while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
-            self.cube = self.mover.make_front(self.cube)
-            self.moveString += " F "
+            self.execute_moves(["F"])
 
         # blue edge is correct but orange edge is wrong
         if (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
-            self.cube = self.mover.make_right(self.cube)
-            self.cube = self.mover.make_right(self.cube)
-            self.moveString += " 2R "
-            self.cube = self.mover.make_back(self.cube)
-            self.moveString += " B "
-            self.cube = self.mover.make_up(self.cube)
-            self.cube = self.mover.make_up(self.cube)
-            self.moveString += " 2U "
-            self.cube = self.mover.make_back(self.cube, inverted = True)
-            self.moveString += " b "
-            self.cube = self.mover.make_right(self.cube)
-            self.cube = self.mover.make_right(self.cube)
-            self.moveString += " 2R "
+            self.execute_moves(["2R", "B", "2U", "b", "2R"])
         # blue is not oriented but orange is oriented
         elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
-            self.cube = self.mover.make_up(self.cube)
-            self.cube = self.mover.make_up(self.cube)
-            self.moveString += " 2U "
-            self.cube = self.mover.make_back(self.cube)
-            self.cube = self.mover.make_back(self.cube)
-            self.moveString += " 2B "
-            self.cube = self.mover.make_down(self.cube)
-            self.cube = self.mover.make_down(self.cube)
-            self.moveString += " 2D "
-            self.cube = self.mover.make_back(self.cube)
-            self.cube = self.mover.make_back(self.cube)
-            self.moveString += " 2B "
-            self.cube = self.mover.make_up(self.cube)
-            self.cube = self.mover.make_up(self.cube)
-            self.moveString += " 2U "
+            self.execute_moves(["2U", "2B", "2D", "2B", "2U"])
         # blue is not oriented and orange is not oriented
         elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
             if self.cube["blue"][0][1] == "G":
                 # orange has blue and green has orange
-                self.cube = self.mover.make_front(self.cube)
-                self.moveString += " F "
-                self.cube = self.mover.make_left(self.cube)
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " 2L "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_up(self.cube)
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " 2U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube)
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " 2L "
+                self.execute_moves(["F", "2L", "b", "2U", "B", "2L"])
             elif self.cube["blue"][0][1] == "O":
                 # orange has green and green has blue
-                self.cube = self.mover.make_front(self.cube, inverted = True)
-                self.moveString += " f "
-                self.cube = self.mover.make_down(self.cube)
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " 2D "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " 2L "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_down(self.cube)
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " 2D "
-            pass
-        
-            
+                self.execute_moves(["f", "2D", "b", "2L", "B", "2D"])
         
         # solve white corners  
         while not self.check_side("white")    :
             #checking every corner
             if self.cube["red"][2][2] == "W":
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
+                self.execute_moves(["L", "B", "l", "b", "L", "B", "l"])
             elif self.cube["red"][0][2] == "W":
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
+                self.execute_moves(["l", "b", "L", "B", "l", "b", "L"])
             elif self.cube["red"][0][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][0][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
 
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                self.execute_moves(["l", "b", "L"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["red"][2][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][2][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "           
+                self.execute_moves(["b", "d", "B", "D"])
+                self.front_moves_handler(frontMoves)         
             elif self.cube["blue"][0][0] == "W":
                 while not self.cube["white"][2][0] == "W":
-                    self.cube = self.mover.make_left(self.cube)
-                    self.moveString += " L "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                    self.moveString += " l "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
+                    self.execute_moves(["L", "B", "l", "b"])
             elif self.cube["blue"][0][2] == "W":
                 while not self.cube["white"][2][2] == "W":
-                    self.cube = self.mover.make_right(self.cube)
-                    self.moveString += " R "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                    self.moveString += " r "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
+                    self.execute_moves(["r", "b", "R", "B"])
             elif self.cube["blue"][2][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][2][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.movert.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
+                self.execute_moves(["B", "L", "b", "l"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["blue"][2][2] == "W":
                 frontMoves = 0
                 while self.cube["white"][2][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
+                while not self.cube["white"][2][2] == "W":
+                    self.execute_moves(["b", "r", "B", "R"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["orange"][0][0] == "W":
                 while not self.cube["white"][0][2] == "W":
-                    self.cube = self.mover.make_right(self.cube)
-                    self.moveString += " R "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-                    self.cube = self.mover.make_right(self.cube, inverted=True)
-                    self.moveString += " r "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
+                    self.execute_moves(["R", "B", "r", "b"])
             elif self.cube["orange"][2][0] == "W":
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
+                self.execute_moves(["r", "b", "R", "B", "r", "b", "R"])
             elif self.cube["orange"][0][2] == "W":
                 frontMoves = 0
-                while self.cube[0][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                while self.cube["white"][0][2] == "W":
+                    self.execute_moves(["F"])
                     frontMoves += 1
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
+                self.execute_moves(["R", "B", "r"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["orange"][2][2] == "W":
                 frontMoves = 0
-                while self.cube[2][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                while self.cube["white"][2][2] == "W":
+                    self.execute_moves(["F"])
                     frontMoves += 1
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
+                self.execute_moves(["r", "b", "R"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["green"][2][0] == "W":
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
+                self.execute_moves(["U", "B", "u", "b", "U", "B", "u"])
             elif self.cube["green"][2][2] == "W":
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
+                self.execute_moves(["u", "b", "U", "B", "u", "b", "U"])
             elif self.cube["green"][0][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][0][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                self.execute_moves(["U", "B", "u"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["green"][0][2] == "W":
                 frontMoves = 0
                 while self.cube["white"][0][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
-                
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.mamke_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                self.execute_moves(["u", "b", "U"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["yellow"][0][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][2][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
                 while not self.cube["white"][2][0] == "W":
-                    self.cube = self.mover.make_left(self.cube)
-                    self.moveString += " L "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                    self.moveString += " l "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["L", "B", "l", "b"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["yellow"][0][2] == "W":
                 frontMoves = 0
                 while self.cube["white"][2][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
                 while not self.cube["white"][2][2] == "W":
-                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                    self.moveString += " r "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
-                    self.cube = self.mover.make_right(self.cube)
-                    self.moveString += " R "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["r", "b", "R", "B"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["yellow"][2][0] == "W":
                 frontMoves = 0
                 while self.cube["white"][0][0] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 while not self.cube["white"][0][0] == "W":
-                    self.cube = self.mover.make_left(self.cube, inverted = True)
-                    self.moveString += " l "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
-                    self.cube = self.mover.make_left(self.cube)
-                    self.moveString += " L "
-                    self.cube=self.mover.make_back(self.cube)
-                    self.moveString += " B "
-
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["l", "b", "L", "B"])
+                self.front_moves_handler(frontMoves)
             elif self.cube["yellow"][2][2] == "W":
                 frontMoves = 0
                 while self.cube["white"][0][2] == "W":
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["F"])
                     frontMoves += 1
                 
                 while not self.cube["white"][0][2] == "W":
-                    self.cube = self.mover.make_right(self.cube)
-                    self.moveString += " R "
-                    self.cube = self.mover.make_back(self.cube)
-                    self.moveString += " B "
-                    self.cube = self.mover.make_right(self.cube, inverted = True)
-                    self.moveString += " r "
-                    self.cube = self.mover.make_back(self.cube, inverted = True)
-                    self.moveString += " b "
-                
-                if frontMoves == 1:
-                    self.cube = self.mover.make_front(self.cube, inverted = True)
-                    self.moveString += " f "
-                elif frontMoves == 2:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " 2F "
-                elif frontMoves == 3:
-                    self.cube = self.mover.make_front(self.cube)
-                    self.moveString += " F "
+                    self.execute_moves(["R", "B", "r", "b"])
+                self.front_moves_handler(frontMoves)
         
-
+        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
+            self.execute_moves(["F"])
+        self.moveString += " aligned edges\n"
         #orient white corners
-        if not (self.cube["red"][0][2] == "R" and self.cube["green"][2][0] == "G"):
+        while not (self.cube["red"][0][2] == "R" and self.cube["green"][2][0] == "G"):
             if self.cube["red"][0][2] == "G" and self.cube["green"][2][0] == "O":
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
+                self.execute_moves(["l", "b", "L", "R", "B", "r", "l", "b", "L"])
             elif self.cube["red"][0][2] == "O" and self.cube["green"][2][0] == "B":
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.moveString += " l "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
+                self.execute_moves(["l", "b", "L", "b", "D", "B", "d", "2B", "U", "b", "u"])
             elif self.cube["red"][0][2] == "B" and self.cube["green"][2][0] == "R":
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-        elif not (self.cube["red"][2][2] == "R" and self.cube["blue"][0][0] == "B"):
+                self.execute_moves(["U", "B", "u", "d", "b", "D", "U", "B", "u"])
+        self.moveString += "RotGrün ecke nun richtig \n"
+        
+        while not (self.cube["red"][2][2] == "R" and self.cube["blue"][0][0] == "B"):
             if self.cube["red"][2][2] == "G" and self.cube["blue"][0][0] == "R":
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-                self.cube = self.mover.make_up(self.cube)
-                self.moveString += " U "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_up(self.cube, inverted = True)
-                self.moveString += " u "
+                self.execute_moves(["U", "B", "u", "d", "b", "D", "U", "B", "u"])
             elif self.cube["red"][2][2] == "B" and self.cube["blue"][0][0] == "O":
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube)
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " 2B "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_left(self.cube)
-                self.moveString += " L "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_left(self.cube, inverted = True)
-                self.moveString += " l "
+                self.execute_moves(["L", "b", "l", "B", "D", "B", "d", "2B", "d", "b", "D"])
             elif self.cube["red"][2][2] == "O" and self.cube["blue"][0][0] == "G":
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_right(self.cube)
-                self.moveString += " R "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_right(self.cube, inverted = True)
-                self.moveString += " r "
-                self.cube = self.mover.make_back(self.cube)
-                self.moveString += " B "
-                self.cube = self.mover.make_down(self.cube, inverted = True)
-                self.moveString += " d "
-                self.cube = self.mover.make_back(self.cube, inverted = True)
-                self.moveString += " b "
-                self.cube = self.mover.make_down(self.cube)
-                self.moveString += " D "
-        elif not (self.cube["blue"][0][2] == "B" and self.cube["orange"][2][0] == "O"):
+                self.execute_moves(["d", "b", "D", "b", "R", "B", "r", "B", "d", "b", "D"])
+        self.moveString += "RotBlau ecke nun richtig\n"
+        while not (self.cube["blue"][0][2] == "B" and self.cube["orange"][2][0] == "O"):
             if self.cube["blue"][0][2] == "O" and self.cube["orange"][2][0] == "G":
-                # r B R B u b U D B d b D B d
-                pass
+                self.execute_moves(["r", "B", "R", "B", "u", "b", "U", "D", "B", "d"])
             elif self.cube["blue"][0][2] == "G" and self.cube["orange"][2][0] == "R":
-                # r B R BB l b L
-                pass
+                self.execute_moves(["r", "B", "R", "2B", "l", "b", "L"])
             elif self.cube["blue"][0][2] == "R" and self.cube["orange"][2][0] == "B":
-                # r b R L B l r b R
+                self.execute_moves(["r", "b", "R", "L", "B", "l", "r", "b", "R"])
+        self.moveString += "BlauOrange ecke nun richtig\n"
+        while not (self.cube["green"][2][2] == "G" and self.cube["orange"][0][0] == "O"):
+            if self.cube["green"][2][2] == "R" and self.cube["orange"][0][0] == "G":
+                self.execute_moves(["R", "B", "r", "l", "b", "L", "R", "B", "r"])
+            elif self.cube["green"][2][2] == "O" and self.cube["orange"][0][0] == "B":
+                self.execute_moves(["R", "B", "r", "b", "D", "b", "d", "B", "R", "B", "r"])
+            elif self.cube["green"][2][2] == "B" and self.cube["orange"][0][0] == "R":
+                self.execute_moves(["R", "B", "r", "B", "d", "b", "D", "b", "R", "B", "r"])
+
+        print(self.moveString)
+        sys.exit()
+
     def start_solve(self):
         while not self.check_side("white"):
             self.solve_white_cross()
-        print("solved white")
+        
 
         # find white edge pieces
         # move edge pieces to white face
@@ -1333,45 +553,42 @@ class RubiksCubeSolver:
         self.orange(orange)
     
     def executeMove(self, move):
-        if move == None:
-            return False
-        mover = Movemaker(self.get_current_cubescramble())
         if move == "R":
-            mover.make_right()
-            pass
+            return self.mover.make_right(self.cube)
         elif move == "r":
-            mover.make_right(True)
-            pass
+            return self.mover.make_right(self.cube, inverted = True)
+        elif move == "2R":
+            return self.mover.make_right(self.mover.make_right(self.cube))
         elif move == "L":
-            mover.make_left()
-            pass
+            return self.mover.make_left(self.cube)
         elif move == "l":
-            mover.make_left(True)
-            pass
+            return self.mover.make_left(self.cube, inverted = True)
+        elif move == "2L":
+            return self.mover.make_left(self.mover.make_left(self.cube))
         elif move == "U":
-            mover.make_up()
-            pass
+            return self.mover.make_up(self.cube)
         elif move == "u":
-            mover.make_up(True)
-            pass
+            return self.mover.make_up(self.cube, inverted = True)
+        elif move == "2U":
+            return self.mover.make_up(self.mover.make_up(self.cube))
         elif move == "B":
-            mover.make_back()
-            pass
+            return self.mover.make_back(self.cube)
         elif move == "b":
-            mover.make_back(True)
-            pass
+            return self.mover.make_back(self.cube, inverted = True)
+        elif move == "2B":
+            return self.mover.make_back(self.mover.make_back(self.cube))
         elif move == "D":
-            mover.make_down()
-            pass
+            return self.mover.make_down(self.cube)
         elif move == "d":
-            mover.make_down(True)
-            pass
+            return self.mover.make_down(self.cube, inverted = True)
+        elif move == "2D":
+            return self.mover.make_down(self.mover.make_down(self.cube))
         elif move == "F":
-            mover.make_front()
-            pass
+            return self.mover.make_front(self.cube)
         elif move == "f":
-            mover.make_front(True)
-            pass
+            return self.mover.make_front(self.cube, inverted = True)
+        elif move == "2F":
+            return self.mover.make_front(self.mover.make_front(self.cube))
     
     def is_edge_piece(self, indices):
         """
@@ -1528,12 +745,36 @@ def setup_main_program():
     orange = [["O" for row in range(3)] for line in range(3)]
 
     cube = {
-        'white': white,
-        'red': red,
-        'blue': blue,
-        'green': green,
-        'yellow':yellow,
-        'orange': orange
+        'white': [
+            ["R", "Y", "G"],
+            ["B", "W", "R"],
+            ["W", "Y", "O"]
+        ],
+        'red': [
+            ["O", "B", "B"],
+            ["R", "R", "R"],
+            ["W", "R", "G"]
+        ],
+        'blue': [
+            ["R", "G", "W"],
+            ["Y", "B", "G"],
+            ["B", "Y", "G"]
+        ],
+        'green': [
+            ["B", "B", "O"],
+            ["W", "G", "O"],
+            ["Y", "B", "Y"]
+        ],
+        'yellow': [
+            ["R", "O", "Y"],
+            ["G", "Y", "O"],
+            ["Y", "O", "W"]
+        ],
+        'orange': [
+            ["O", "G", "G"],
+            ["W", "O", "W"],
+            ["B", "W", "R"]
+        ]
     }
 
     root = tk.Tk()
