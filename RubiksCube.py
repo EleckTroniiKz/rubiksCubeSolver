@@ -680,13 +680,56 @@ class RubiksCubeSolver:
             self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
 
     def solve_yellow_corners(self):
-        pass
+        if self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y" and \
+            self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y" and \
+                self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y":
+                while not (self.cube["green"][0][0] == "G" or self.cube["green"][0][0] == "R" or self.cube["green"][0][0] == "Y" and \
+                            self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y" and \
+                            self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y"):
+                    self.execute_moves(["B", "R", "b", "l", "B", "r", "b", "L"])
+        elif self.cube["green"][0][0] == "G" or self.cube["green"][0][2] == "R" or self.cube["green"][0][2] == "Y" and \
+            self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y" and \
+                self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y":
+                while not (self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y" and \
+                            self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y" and \
+                            self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y"):
+                    self.execute_moves(["B", "U", "b", "d", "B", "u", "b", "D"]) 
+        elif self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y" and \
+            self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y" and \
+                self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y":
+                while not (self.cube["blue"][0][0] == "B" or self.cube["blue"][0][2] == "O" or self.cube["blue"][0][2] == "Y" and \
+            self.cube["orange"][0][0] == "B" or self.cube["orange"][0][0] == "O" or self.cube["orange"][0][0] == "Y" and \
+                self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y"):
+                    self.execute_moves(["B", "L", "b", "r", "B", "l", "b", "R"])
+        elif self.cube["blue"][0][0] == "B" or self.cube["blue"][0][2] == "O" or self.cube["blue"][0][2] == "Y" and \
+            self.cube["orange"][0][0] == "B" or self.cube["orange"][0][0] == "O" or self.cube["orange"][0][0] == "Y" and \
+                self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y":
+                while not (self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y" and \
+            self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y" and \
+                self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y"):
+                    self.execute_moves(["B", "D", "b", "u", "B", "d", "b", "U"])
+
+        for i in range(4):
+            while not self.cube["yellow"][2][2] == "Y":
+                self.execute_moves(["r", "f", "R", "F"])
+            self.execute_moves(["b"])
 
     def start_solve(self):
         self.solve_white_cross()
+        print(self.moveString)
+        self.moveString = ""
+        print("-------------------------white side done-----------------------------------")
         self.solve_second_layer()
+        print(self.moveString)
+        self.moveString = ""
+        print("-------------------------second layer done-----------------------------------")
         self.create_yellow_cross()
         self.solve_yellow_edges()
+        print(self.moveString)
+        self.moveString = ""
+        print("------------------------------yellow edges------------------------------")
+        self.solve_yellow_corners()
+        print(self.moveString)
         
 
     def startTimer(self):
