@@ -489,8 +489,6 @@ class RubiksCubeSolver:
                 self.execute_moves(["R", "B", "r", "b", "D", "b", "d", "B", "R", "B", "r"])
             elif self.cube["green"][2][2] == "B" and self.cube["orange"][0][0] == "R":
                 self.execute_moves(["R", "B", "r", "B", "d", "b", "D", "b", "R", "B", "r"])
-
-        print(self.moveString)
         
     def get_cube(self):
         return self.cube
@@ -668,11 +666,27 @@ class RubiksCubeSolver:
             else:
                 self.execute_moves(["B"])
             
-            
+    def solve_yellow_edges(self):
+        while not self.cube["red"][1][0] == "R":
+            self.execute_moves(["B"])
+        
+        if self.cube["blue"][2][1] == "B" and self.cube["orange"][1][2] == "G":
+            self.execute_moves(["D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B"])
+        elif self.cube["blue"][2][1] == "O" and self.cube["orange"][1][2] == "B":
+            self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B"])
+        elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "B":
+            self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B"])
+        elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "O":
+            self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
+
+    def solve_yellow_corners(self):
+        pass
+
     def start_solve(self):
         self.solve_white_cross()
         self.solve_second_layer()
         self.create_yellow_cross()
+        self.solve_yellow_edges()
         
 
     def startTimer(self):
