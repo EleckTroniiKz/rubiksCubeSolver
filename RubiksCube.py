@@ -41,34 +41,15 @@ class RubiksCubeSolver:
             return 3
         elif self.cube["yellow"][0][1] == self.cube["yellow"][2][1] == "Y" or self.cube["yellow"][1][0] == self.cube["yellow"][1][2] == "Y":
             return 2
-        elif self.cube["yellow"][0][1] == self.cube["yellow"][1][0] == "Y" or \
-            self.cube["yellow"][0][2] == self.cube["yellow"][1][2] == "Y" or \
-                self.cube["yellow"][2][0] == self.cube["yellow"][1][0] == "Y" or \
-                    self.cube["yellow"][2][2] == self.cube["yellow"][1][2] == "Y":
-                    return 1
+        elif self.cube["yellow"][0][1] == self.cube["yellow"][1][0] == "Y":
+            return 1 
         else:
             return 0
-
-    def phase_2_at_right_position(self):
-        while not (self.cube["yellow"][1][0] == self.cube["yellow"][1][2] == "Y"):
-            self.cube = self.mover.make_back(self.cube)
-
-    def phase_1_at_right_position(self):
-        while not (self.cube["yellow"][1][0] == self.cube["yellow"][0][1] == "Y"):
-            self.cube = self.mover.make_back(self.cube)
-        
-    def top_cross_algorithm(self):
-        self.cube = self.mover.make_right(self.cube)
-        self.cube = self.mover.make_down(self.cube)
-        self.cube = self.mover.make_back(self.cube)
-        self.cube = self.mover.make_right(self.cube, inverted = True)
-        self.cube = self.mover.make_down(self.cube, inverted = True)
-        self.cube = self.mover.make_back(self.cube, inverted = True)
 
     def create_yellow_cross(self):
         hasCross = False
         """
-        pahse 0 : only center yellow
+        phase 0 : only center yellow
         phase 1 : yellow L
         phase 2 : yellow Line
         phase 3 : yellow Cross 
@@ -76,16 +57,26 @@ class RubiksCubeSolver:
         while not hasCross:
             currentPhase = self.get_cross_phase()
             if currentPhase == 0:
-                self.top_cross_algorithm()
+                if self.cube["yellow"][0][1] == self.cube["yellow"][1][2] == "Y":
+                    self.execute_moves(["b"])
+                    self.execute_moves(["U", "R", "B", "r", "b", "u"])
+                elif self.cube["yellow"][1][2] == self.cube["yellow"][2][1] == "Y":
+                    self.execute_moves(["2B"])
+                    self.execute_moves(["U", "R", "B", "r", "b", "u"])
+                elif self.cube["yellow"][1][0] == self.cube["yellow"][2][1] == "Y":
+                    self.execute_moves(["B"])
+                    self.execute_moves(["U", "R", "B", "r", "b", "u"])
+                else:
+                    self.execute_moves(["U", "R", "B", "r", "b", "u"])
             elif currentPhase == 1:
-                #reorientate correctly
-                self.phase_1_at_right_position()
-                self.top_cross_algorithm()
+                self.execute_moves(["U", "R", "B", "r", "b", "u"])
             elif currentPhase == 2:
                 #locate correctly
-                self.phase_2_at_right_position()
-                self.top_cross_algorithm()
+                while not self.cube["yellow"][1][0] == self.cube["yellow"][1][2] == "Y":
+                    self.execute_moves(["B"])
+                self.execute_moves(["U", "R", "B", "r", "b", "u"])
             else:
+                hasCross = True
                 # yellow cross has been created at this point
                 return
 
@@ -508,13 +499,17 @@ class RubiksCubeSolver:
         return (self.cube["red"][1][0] == "Y" or self.cube["yellow"][1][0] == "Y") and (self.cube["blue"][2][1] == "Y" or self.cube["yellow"][0][1] == "Y") and (self.cube["green"][0][1] == "Y" or self.cube["yellow"][2][1] == "Y") and (self.cube["orange"][1][2] == "Y" or self.cube["yellow"][1][2] == "Y") 
 
     def solve_second_layer(self):
-        red_green_edge, red_blue_edge, orange_green_edge, orange_blue_edge = False,False, False, False
+        red_green_edge, red_blue_edge, orange_green_edge, orange_blue_edge = False, False, False, False
+        old_correct = 0
+        current_correct = 0
+        
         while not self.finished_second_layer():
             if not red_green_edge:
                 if self.cube["red"][0][1] == "R" and not self.cube["green"][1][0] == "Y":
                     if self.cube["green"][1][0] == "B":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "L", "b", "l", "b", "d", "B", "D"])
                         red_green_edge = True
+                        current_correct += 1
                 elif (self.cube["red"][0][1] == "B" or self.cube["red"][0][1] == "G") and self.cube["green"][1][0] == "R":
                     if self.cube["red"][0][1] == "B":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L"])
@@ -523,100 +518,131 @@ class RubiksCubeSolver:
                         elif self.cube["yellow"][1][2] == "R":
                             self.execute_moves(["L", "b", "l", "b", "d", "B", "D"])
                         red_blue_edge = True
+                        current_correct += 1
                     else:
                         self.move_executor(["U", "b", "u", "b", "l", "B", "L", "b", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
+                        current_correct += 1
                 elif (self.cube["red"][0][1] == "B" and self.cube["green"][1][0] == "O"):
                     self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "B", "D", "b", "d", "b", "r", "B", "R"])
                     orange_blue_edge = True
+                    current_correct += 1
                 elif (self.cube["red"][0][1] == "G" and self.cube["green"][1][0] == "O"):
                     self.move_executor(["U", "b", "u", "b", "l", "B", "L", "b", "u", "B", "U", "B", "R", "b", "r"])
                     orange_green_edge = True
+                    current_correct += 1
                 elif (self.cube["red"][0][1] == "O") and not self.cube["green"][1][0] == "Y":
                     if self.cube["green"][1][0] == "G":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "2B", "R", "b", "r", "b", "u", "B", "U"])
                         orange_green_edge = True
+                        current_correct += 1
                     elif self.cube["green"][1][0] == "B":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "2B", "r", "B", "R", "B", "D", "b", "D"])
                         orange_blue_edge = True
+                        current_correct += 1
             if not red_blue_edge:
                 if (self.cube["red"][2][1] == "R") and not self.cube["blue"][1][0] == "Y":
                     if self.cube["blue"][1][0] == "G":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "2B", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
+                        current_correct += 1
                 elif self.cube["red"][2][1] == "G" and not self.cube["blue"][1][0] == "Y":
                     if self.cube["blue"][1][0] == "R":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "b", "l", "B", "L", "B", "U", "b", "u"])
                         red_green_edge = True
+                        current_correct += 1
                     elif self.cube["blue"][1][0] == "O":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "B", "R", "b", "r", "b", "u", "B", "U"])
                         orange_green_edge = True
+                        current_correct += 1
                 elif self.cube["red"][2][1] == "B" and not self.cube["blue"][1][0] == "Y":
                     if self.cube["blue"][1][0] == "O":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "b", "L", "b", "l", "b", "d", "B", "D"])
                         orange_blue_edge = True
+                        current_correct += 1
                     elif self.cube["blue"][1][0] == "R":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "b", "L", "b", "l", "b", "d", "B", "D"])
                         red_blue_edge = True
+                        current_correct += 1
                 elif self.cube["red"][2][1] == "O" and not self.cube["blue"][1][0] == "Y":
                     if self.cube["blue"][1][0] == "B":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "D", "b", "d" ,"b", "r", "B", "R"])
                         orange_blue_edge = True
+                        current_correct += 1
                     elif self.cube["blue"][1][0] == "G":
                         self.execute_moves(["L", "b", "l", "b", "d", "B", "D", "2B", "U", "B", "u", "B", "R", "b", "r"])
                         orange_green_edge = True
+                        current_correct += 1
             if not orange_blue_edge:
                 if self.cube["blue"][1][2] == "B" and not self.cube["orange"][2][1] == "Y":
                     if self.cube["orange"][2][1] == "R":
                         self.execute_moves(["R", "B", "r", "B", "D", "b", "d", "d", "B", "D", "B", "L", "b", "l"])
                         red_blue_edge = True
+                        current_correct += 1
                 elif self.cube["blue"][1][2] == "R" and not self.cube["orange"][2][1] == "Y":
                     if self.cube["orange"][2][1] == "B":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "b", "L", "b", "l", "b", "d", "B", "D" ])
                         red_blue_edge = True
+                        current_correct += 1
                     elif self.cube["orange"][2][1] == "G":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "b", "L","b", "l", "B", "L", "B", "U", "b", "u"])
                         red_green_edge = True
+                        current_correct += 1
                 elif self.cube["blue"][1][2] == "O" and not self.cube["orange"][2][1] == "Y":
                     if self.cube["orange"][2][1] == "B":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "B", "r", "B", "R", "B", "D", "b", "d"])
                         orange_blue_edge = True
+                        current_correct += 1
                     elif self.cube["orange"][2][1] == "G":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "B", "R", "b", "r", "b", "u", "B", "U"])
                         orange_green_edge = True
+                        current_correct += 1
                 elif self.cube["blue"][1][2] == "G" and not self.cube["orange"][2][1] == "Y":
                     if self.cube["orange"][2][1] == "R":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "2B", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
+                        current_correct += 1
                     elif self.cube["orange"][2][1] == "O":
                         self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "2B", "u", "B", "U", "B", "R", "b", "r"])
                         orange_green_edge = True
+                        current_correct += 1
             if not orange_green_edge:
                 if self.cube["orange"][0][1] == "O" and self.cube["green"][1][2] == "B":
                     self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "2B", "D", "b", "d", "b", "r", "B", "R"])
                     orange_blue_edge = True
+                    current_correct += 1
                 elif self.cube["orange"][0][1] == "G" and not self.cube["green"][1][2] == "Y":
                     if self.cube["green"][1][2] == "R":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "B", "l", "B", "L", "B", "U", "b", "u"]) 
                         red_green_edge = True
+                        current_correct += 1
                     elif self.cube["green"][1][2] == "O":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "b", "R", "b", "r", "b", "u", "B", "U"])
                         orange_green_edge = True
+                        current_correct += 1
                 elif self.cube["orange"][0][1] == "B" and not self.cube["green"][1][2] == "Y":
                     if self.cube["green"][1][2] == "R":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "B", "L", "b", "l", "b", "d", "B", "D"])
                         red_blue_edge = True
+                        current_correct += 1
                     elif self.cube["green"][1][2] == "O":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "b", "r", "B", "R", "B", "D", "b", "d"])
                         orange_blue_edge = True
+                        current_correct += 1
                 elif self.cube["orange"][0][1] == "R" and not self.cube["green"][1][2] == "Y":
                     if self.cube["green"][1][2] == "B":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "2B", "d", "B", "D", "B", "L", "b", "l"])
                         orange_green_edge = True
+                        current_correct += 1
                     elif self.cube["green"][1][2] == "G":
                         self.execute_moves(["R", "b", "r", "b", "u", "B", "U", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
-                
+                        current_correct += 1
+            if old_correct < current_correct:
+                old_correct = current_correct
+            elif old_correct == current_correct:
+                break
+
         while not self.finished_second_layer():
             if not self.cube["red"][1][0] == "Y" and not self.cube["yellow"][1][0] == "Y":
                 if self.cube["red"][1][0] == "R":
@@ -646,6 +672,7 @@ class RubiksCubeSolver:
     def start_solve(self):
         self.solve_white_cross()
         self.solve_second_layer()
+        self.create_yellow_cross()
         
 
     def startTimer(self):
