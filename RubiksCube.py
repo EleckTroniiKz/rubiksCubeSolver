@@ -583,7 +583,7 @@ class RubiksCubeSolver:
                         red_blue_edge = True
                         current_correct += 1
                     elif self.cube["orange"][2][1] == "G":
-                        self.execute_moves(["r", "B", "R", "B", "D", "b", "d", "b", "L","b", "l", "B", "L", "B", "U", "b", "u"])
+                        self.execute_moves(["B", "D", "b", "d", "b", "r", "B", "R", "B", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
                         current_correct += 1
                 elif self.cube["blue"][1][2] == "O" and not self.cube["orange"][2][1] == "Y":
@@ -680,35 +680,47 @@ class RubiksCubeSolver:
             self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
 
     def solve_yellow_corners(self):
-        if self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y" and \
-            self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y" and \
-                self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y":
-                while not (self.cube["green"][0][0] == "G" or self.cube["green"][0][0] == "R" or self.cube["green"][0][0] == "Y" and \
-                            self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y" and \
-                            self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y"):
-                    self.execute_moves(["B", "R", "b", "l", "B", "r", "b", "L"])
-        elif self.cube["green"][0][0] == "G" or self.cube["green"][0][2] == "R" or self.cube["green"][0][2] == "Y" and \
-            self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y" and \
-                self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y":
-                while not (self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y" and \
-                            self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y" and \
-                            self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y"):
-                    self.execute_moves(["B", "U", "b", "d", "B", "u", "b", "D"]) 
-        elif self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y" and \
-            self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y" and \
-                self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y":
-                while not (self.cube["blue"][0][0] == "B" or self.cube["blue"][0][2] == "O" or self.cube["blue"][0][2] == "Y" and \
-            self.cube["orange"][0][0] == "B" or self.cube["orange"][0][0] == "O" or self.cube["orange"][0][0] == "Y" and \
-                self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y"):
-                    self.execute_moves(["B", "L", "b", "r", "B", "l", "b", "R"])
-        elif self.cube["blue"][0][0] == "B" or self.cube["blue"][0][2] == "O" or self.cube["blue"][0][2] == "Y" and \
-            self.cube["orange"][0][0] == "B" or self.cube["orange"][0][0] == "O" or self.cube["orange"][0][0] == "Y" and \
-                self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y":
-                while not (self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y" and \
-            self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y" and \
-                self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y"):
-                    self.execute_moves(["B", "D", "b", "u", "B", "d", "b", "U"])
-
+        red_blue = False
+        red_green = False
+        orange_blue = False
+        orange_green = False
+        while not (red_blue or red_green or orange_blue and orange_green): 
+            if (self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y") and \
+                (self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y") and \
+                    (self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y"):
+                    while not ((self.cube["green"][0][0] == "G" or self.cube["green"][0][0] == "R" or self.cube["green"][0][0] == "Y") and \
+                                (self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y") and \
+                                (self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y")):
+                        self.execute_moves(["B", "R", "b", "l", "B", "r", "b", "L"])
+                    orange_green = True
+            elif (self.cube["green"][0][0] == "G" or self.cube["green"][0][0] == "R" or self.cube["green"][0][0] == "Y") and \
+                (self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y") and \
+                    (self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y"):
+                    while not ((self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y") and \
+                                (self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y") and \
+                                (self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y")):
+                        self.execute_moves(["B", "U", "b", "d", "B", "u", "b", "D"]) 
+                    red_green = True
+            elif (self.cube["blue"][2][0] == "B" or self.cube["blue"][2][0] == "R" or self.cube["blue"][2][0] == "Y") and \
+                (self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y") and \
+                    (self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y"):
+                    while not ((self.cube["blue"][2][2] == "B" or self.cube["blue"][2][2] == "O" or self.cube["blue"][2][2] == "Y") and \
+                (self.cube["orange"][2][2] == "B" or self.cube["orange"][2][2] == "O" or self.cube["orange"][2][2] == "Y") and \
+                    (self.cube["yellow"][0][2] == "B" or self.cube["yellow"][0][2] == "O" or self.cube["yellow"][0][2] == "Y")):
+                        self.execute_moves(["B", "L", "b", "r", "B", "l", "b", "R"])
+                    red_blue = True
+            elif (self.cube["blue"][2][2] == "B" or self.cube["blue"][2][2] == "O" or self.cube["blue"][2][2] == "Y") and \
+                (self.cube["orange"][2][0] == "B" or self.cube["orange"][2][0] == "O" or self.cube["orange"][2][0] == "Y") and \
+                    (self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y"):
+                    while not ((self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y") and \
+                (self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y") and \
+                    (self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y")):
+                        self.execute_moves(["B", "D", "b", "u", "B", "d", "b", "U"])
+                    orange_blue = True
+            else:
+                self.execute_moves(["B", "R", "b", "l", "B", "r", "b", "L"])
+        
+        
         for i in range(4):
             while not self.cube["yellow"][2][2] == "Y":
                 self.execute_moves(["r", "f", "R", "F"])
@@ -976,34 +988,34 @@ def setup_main_program():
 
     cube = {
         'white': [
-            ["G", "G", "W"],
-            ["W", "W", "R"],
-            ["B", "W", "O"]
+            ["Y", "Y", "Y"],
+            ["B", "W", "B"],
+            ["W", "G", "O"]
         ],
         'red': [
-            ["W", "B", "Y"],
-            ["Y", "R", "R"],
-            ["O", "B", "R"]
+            ["G", "Y", "G"],
+            ["W", "R", "O"],
+            ["W", "Y", "B"]
         ],
         'blue': [
-            ["Y", "O", "B"],
-            ["O", "B", "G"],
-            ["B", "W", "B"]
+            ["O", "W", "G"],
+            ["O", "B", "Y"],
+            ["B", "R", "B"]
         ],
         'green': [
-            ["G", "R", "G"],
-            ["R", "G", "O"],
-            ["O", "W", "G"]
+            ["R", "R", "Y"],
+            ["R", "G", "G"],
+            ["R", "B", "B"]
         ],
         'yellow': [
-            ["W", "B", "W"],
-            ["B", "Y", "G"],
-            ["R", "G", "R"]
+            ["R", "W", "R"],
+            ["O", "Y", "R"],
+            ["W", "G", "O"]
         ],
         'orange': [
-            ["O", "Y", "Y"],
-            ["Y", "O", "O"],
-            ["Y", "Y", "R"]
+            ["O", "O", "G"],
+            ["W", "O", "B"],
+            ["W", "G", "Y"]
         ]
     }
 
