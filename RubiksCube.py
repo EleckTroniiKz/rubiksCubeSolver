@@ -684,7 +684,7 @@ class RubiksCubeSolver:
         red_green = False
         orange_blue = False
         orange_green = False
-        while not (red_blue or red_green or orange_blue and orange_green): 
+        while not (red_blue or red_green or orange_blue or orange_green): 
             if (self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y") and \
                 (self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y") and \
                     (self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y"):
