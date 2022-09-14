@@ -312,11 +312,11 @@ class RubiksCubeSolver:
             white_has_cross = self.check_white_cross()
             if white_has_cross:
                 break
-            
+        
         #orientate white edges
         while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
             self.execute_moves(["F"])
-
+        
         # blue edge is correct but orange edge is wrong
         if (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
             self.execute_moves(["2R", "B", "2U", "b", "2R"])
@@ -468,6 +468,7 @@ class RubiksCubeSolver:
             elif self.cube["red"][0][2] == "B" and self.cube["green"][2][0] == "R":
                 self.execute_moves(["U", "B", "u", "d", "b", "D", "U", "B", "u"])
         
+        
         while not (self.cube["red"][2][2] == "R" and self.cube["blue"][0][0] == "B"):
             if self.cube["red"][2][2] == "G" and self.cube["blue"][0][0] == "R":
                 self.execute_moves(["U", "B", "u", "d", "b", "D", "U", "B", "u"])
@@ -506,7 +507,7 @@ class RubiksCubeSolver:
                 if self.cube["red"][0][1] == "R" and not self.cube["green"][1][0] == "Y":
                     if self.cube["green"][1][0] == "B":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "L", "b", "l", "b", "d", "B", "D"])
-                        red_green_edge = True
+                        red_blue_edge = True 
                         current_correct += 1
                 elif (self.cube["red"][0][1] == "B" or self.cube["red"][0][1] == "G") and self.cube["green"][1][0] == "R":
                     if self.cube["red"][0][1] == "B":
@@ -518,7 +519,7 @@ class RubiksCubeSolver:
                         red_blue_edge = True
                         current_correct += 1
                     else:
-                        self.move_executor(["U", "b", "u", "b", "l", "B", "L", "b", "U", "b", "u", "b", "l", "B", "L"])
+                        self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "b", "U", "b", "u", "b", "l", "B", "L"])
                         red_green_edge = True
                         current_correct += 1
                 elif (self.cube["red"][0][1] == "B" and self.cube["green"][1][0] == "O"):
@@ -526,7 +527,7 @@ class RubiksCubeSolver:
                     orange_blue_edge = True
                     current_correct += 1
                 elif (self.cube["red"][0][1] == "G" and self.cube["green"][1][0] == "O"):
-                    self.move_executor(["U", "b", "u", "b", "l", "B", "L", "b", "u", "B", "U", "B", "R", "b", "r"])
+                    self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "b", "u", "B", "U", "B", "R", "b", "r"])
                     orange_green_edge = True
                     current_correct += 1
                 elif (self.cube["red"][0][1] == "O") and not self.cube["green"][1][0] == "Y":
@@ -534,8 +535,8 @@ class RubiksCubeSolver:
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "2B", "R", "b", "r", "b", "u", "B", "U"])
                         orange_green_edge = True
                         current_correct += 1
-                    elif self.cube["green"][1][0] == "B":
-                        self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "2B", "r", "B", "R", "B", "D", "b", "D"])
+                    elif self.cube["green"][1][0] == "B":#hier läuft wat falsch
+                        self.execute_moves(["U", "b", "u", "b", "l", "B", "L", "2B", "r", "B", "R", "B", "D", "b", "d"])
                         orange_blue_edge = True
                         current_correct += 1
             if not red_blue_edge:
@@ -640,7 +641,7 @@ class RubiksCubeSolver:
                 old_correct = current_correct
             elif old_correct == current_correct:
                 break
-
+        
         while not self.finished_second_layer():
             if not self.cube["red"][1][0] == "Y" and not self.cube["yellow"][1][0] == "Y":
                 if self.cube["red"][1][0] == "R":
@@ -678,6 +679,8 @@ class RubiksCubeSolver:
             self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B"])
         elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "O":
             self.execute_moves(["L", "B", "l", "B", "L", "B", "B", "l", "B", "D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
+        elif self.cube["blue"][2][1] == "O" and self.cube["orange"][1][2] == "G":
+            self.execute_moves(["D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
 
     def solve_yellow_corners(self):
         red_blue = False
@@ -728,16 +731,24 @@ class RubiksCubeSolver:
 
     def start_solve(self):
         self.solve_white_cross()
+        
         print(self.moveString)
         self.moveString = ""
         print("-------------------------white side done-----------------------------------")
         self.solve_second_layer()
+        
         print(self.moveString)
         self.moveString = ""
         print("-------------------------second layer done-----------------------------------")
         self.create_yellow_cross()
-        self.solve_yellow_edges()
         print(self.moveString)
+        self.moveString = ""
+        print("-------------------------yellow cross-----------------------------------")
+        self.solve_yellow_edges()
+        
+        
+        print(self.moveString)
+        
         self.moveString = ""
         print("------------------------------yellow edges------------------------------")
         self.solve_yellow_corners()
@@ -988,34 +999,34 @@ def setup_main_program():
 
     cube = {
         'white': [
-            ["Y", "Y", "Y"],
-            ["B", "W", "B"],
-            ["W", "G", "O"]
+            ["R", "R", "Y"],
+            ["B", "W", "Y"],
+            ["W", "W", "G"]
         ],
         'red': [
-            ["G", "Y", "G"],
-            ["W", "R", "O"],
-            ["W", "Y", "B"]
+            ["R", "O", "W"],
+            ["W", "R", "Y"],
+            ["G", "W", "B"]
         ],
         'blue': [
-            ["O", "W", "G"],
-            ["O", "B", "Y"],
-            ["B", "R", "B"]
+            ["O", "O", "O"],
+            ["R", "B", "G"],
+            ["W", "G", "G"]
         ],
         'green': [
-            ["R", "R", "Y"],
-            ["R", "G", "G"],
-            ["R", "B", "B"]
+            ["Y", "R", "G"],
+            ["B", "G", "G"],
+            ["B", "G", "B"]
         ],
         'yellow': [
-            ["R", "W", "R"],
-            ["O", "Y", "R"],
-            ["W", "G", "O"]
+            ["R", "O", "W"],
+            ["B", "Y", "O"],
+            ["B", "B", "R"]
         ],
         'orange': [
-            ["O", "O", "G"],
-            ["W", "O", "B"],
-            ["W", "G", "Y"]
+            ["O", "Y", "Y"],
+            ["R", "O", "Y"],
+            ["Y", "W", "O"]
         ]
     }
 
