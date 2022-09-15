@@ -495,7 +495,8 @@ class RubiksCubeSolver:
         return self.cube
 
     def finished_second_layer(self):
-        return (self.cube["red"][1][0] == "Y" or self.cube["yellow"][1][0] == "Y") and (self.cube["blue"][2][1] == "Y" or self.cube["yellow"][0][1] == "Y") and (self.cube["green"][0][1] == "Y" or self.cube["yellow"][2][1] == "Y") and (self.cube["orange"][1][2] == "Y" or self.cube["yellow"][1][2] == "Y") 
+        return ((self.cube["red"][1][0] == "Y" or self.cube["yellow"][1][0] == "Y") and (self.cube["blue"][2][1] == "Y" or self.cube["yellow"][0][1] == "Y") and (self.cube["green"][0][1] == "Y" or self.cube["yellow"][2][1] == "Y") and (self.cube["orange"][1][2] == "Y" or self.cube["yellow"][1][2] == "Y")) \
+            and ((self.cube["red"][0][1] == "R" and self.cube["green"][1][0] == "G") and (self.cube["red"][2][1] == "R" or self.cube["blue"][1][0] == "B") and (self.cube["blue"][1][2] == "B" and self.cube["orange"][2][1] == "O") and (self.cube["orange"][0][1] == "O" and self.cube["green"][1][2] == "G")) 
 
     def solve_second_layer(self):
         red_green_edge, red_blue_edge, orange_green_edge, orange_blue_edge = False, False, False, False
@@ -999,34 +1000,34 @@ def setup_main_program():
 
     cube = {
         'white': [
-            ["R", "R", "Y"],
-            ["B", "W", "Y"],
-            ["W", "W", "G"]
+            ["B", "Y", "G"],
+            ["B", "W", "R"],
+            ["R", "G", "G"]
         ],
         'red': [
-            ["R", "O", "W"],
-            ["W", "R", "Y"],
-            ["G", "W", "B"]
+            ["R", "B", "W"],
+            ["W", "R", "R"],
+            ["B", "R", "B"]
         ],
         'blue': [
-            ["O", "O", "O"],
-            ["R", "B", "G"],
-            ["W", "G", "G"]
+            ["W", "R", "O"],
+            ["Y", "B", "G"],
+            ["Y", "W", "Y"]
         ],
         'green': [
-            ["Y", "R", "G"],
-            ["B", "G", "G"],
-            ["B", "G", "B"]
+            ["W", "W", "O"],
+            ["Y", "G", "B"],
+            ["O", "O", "R"]
         ],
         'yellow': [
-            ["R", "O", "W"],
-            ["B", "Y", "O"],
-            ["B", "B", "R"]
+            ["R", "B", "O"],
+            ["O", "Y", "Y"],
+            ["G", "G", "W"]
         ],
         'orange': [
-            ["O", "Y", "Y"],
-            ["R", "O", "Y"],
-            ["Y", "W", "O"]
+            ["Y", "O", "G"],
+            ["W", "O", "G"],
+            ["Y", "O", "B"]
         ]
     }
 
