@@ -306,7 +306,8 @@ class RubiksCubeSolver:
                                         self.execute_moves(["2F", "d", "2F"])
                                     else:
                                         self.execute_moves(["f", "d", "F"])
-                        solved += 1            
+                        solved += 1  
+                        break          
                         
             index = (index+1) if not (index+1) == 5 else 0
             white_has_cross = self.check_white_cross()
@@ -742,6 +743,8 @@ class RubiksCubeSolver:
         self.moveString = ""
         print("-------------------------second layer done-----------------------------------")
         self.create_yellow_cross()
+        
+
         print(self.moveString)
         self.moveString = ""
         print("-------------------------yellow cross-----------------------------------")
@@ -1001,34 +1004,34 @@ def setup_main_program():
 
     cube = {
         'white': [
-            ["W", "Y", "G"],
-            ["Y", "W", "B"],
-            ["W", "R", "B"]
+            ["O", "O", "G"],
+            ["B", "W", "G"],
+            ["Y", "R", "W"]
         ],
         'red': [
-            ["Y", "O", "B"],
-            ["R", "R", "B"],
-            ["B", "O", "G"]
+            ["B", "W", "G"],
+            ["G", "R", "O"],
+            ["Y", "R", "R"]
         ],
         'blue': [
-            ["R", "G", "O"],
-            ["Y", "B", "G"],
-            ["Y", "G", "O"]
+            ["G", "B", "G"],
+            ["Y", "B", "Y"],
+            ["R", "B", "O"]
         ],
         'green': [
-            ["G", "G", "O"],
-            ["W", "G", "B"],
-            ["R", "R", "R"]
+            ["Y", "W", "R"],
+            ["G", "G", "B"],
+            ["Y", "W", "O"]
         ],
         'yellow': [
-            ["R", "O", "G"],
             ["B", "Y", "W"],
-            ["O", "W", "Y"]
+            ["O", "Y", "R"],
+            ["O", "R", "W"]
         ],
         'orange': [
-            ["Y", "O", "B"],
-            ["W", "O", "R"],
-            ["W", "Y", "W"]
+            ["W", "W", "B"],
+            ["Y", "O", "G"],
+            ["R", "O", "B"]
         ]
     }
 
