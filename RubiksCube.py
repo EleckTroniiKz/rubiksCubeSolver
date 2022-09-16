@@ -218,7 +218,7 @@ class RubiksCubeSolver:
                                 elif not self.cube["white"][1][2] == "W":
                                     self.execute_moves(["2U", "r", "2U"])
                                 else:
-                                    self.execute_moves(["U", "l", "D", "L"])
+                                    self.execute_moves(["b", "R", "d", "r"])
                             elif indices == (1,0):
                                 if not self.cube["white"][0][1] == "W":
                                     self.execute_moves(["f", "L", "F", "l"])
@@ -312,7 +312,7 @@ class RubiksCubeSolver:
             white_has_cross = self.check_white_cross()
             if white_has_cross:
                 break
-        
+
         #orientate white edges
         while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
             self.execute_moves(["F"])
@@ -514,7 +514,7 @@ class RubiksCubeSolver:
                     if self.cube["red"][0][1] == "B":
                         self.execute_moves(["U", "b", "u", "b", "l", "B", "L"])
                         if self.cube["yellow"][1][2] == "B":
-                            self.execute_moves(["B", "d", "B", "D", "B", "L", "b", "L"])
+                            self.execute_moves(["B", "d", "B", "D", "B", "L", "b", "l"])
                         elif self.cube["yellow"][1][2] == "R":
                             self.execute_moves(["L", "b", "l", "b", "d", "B", "D"])
                         red_blue_edge = True
@@ -576,7 +576,7 @@ class RubiksCubeSolver:
             if not orange_blue_edge:
                 if self.cube["blue"][1][2] == "B" and not self.cube["orange"][2][1] == "Y":
                     if self.cube["orange"][2][1] == "R":
-                        self.execute_moves(["R", "B", "r", "B", "D", "b", "d", "d", "B", "D", "B", "L", "b", "l"])
+                        self.execute_moves(["D", "b", "d", "b", "r", "B", "R", "2B", "L", "b", "l", "b", "d", "B", "D" ])
                         red_blue_edge = True
                         current_correct += 1
                 elif self.cube["blue"][1][2] == "R" and not self.cube["orange"][2][1] == "Y":
@@ -700,7 +700,7 @@ class RubiksCubeSolver:
             elif (self.cube["green"][0][0] == "G" or self.cube["green"][0][0] == "R" or self.cube["green"][0][0] == "Y") and \
                 (self.cube["red"][0][0] == "G" or self.cube["red"][0][0] == "R" or self.cube["red"][0][0] == "Y") and \
                     (self.cube["yellow"][2][0] == "G" or self.cube["yellow"][2][0] == "R" or self.cube["yellow"][2][0] == "Y"):
-                    while not ((self.cube["blue"][2][0] == "B" or self.cube["blue"][2][2] == "R" or self.cube["blue"][2][2] == "Y") and \
+                    while not ((self.cube["blue"][2][0] == "B" or self.cube["blue"][2][0] == "R" or self.cube["blue"][2][0] == "Y") and \
                                 (self.cube["red"][2][0] == "B" or self.cube["red"][2][0] == "R" or self.cube["red"][2][0] == "Y") and \
                                 (self.cube["yellow"][0][0] == "B" or self.cube["yellow"][0][0] == "R" or self.cube["yellow"][0][0] == "Y")):
                         self.execute_moves(["B", "U", "b", "d", "B", "u", "b", "D"]) 
@@ -713,9 +713,9 @@ class RubiksCubeSolver:
                     (self.cube["yellow"][0][2] == "B" or self.cube["yellow"][0][2] == "O" or self.cube["yellow"][0][2] == "Y")):
                         self.execute_moves(["B", "L", "b", "r", "B", "l", "b", "R"])
                     red_blue = True
-            elif (self.cube["blue"][2][2] == "B" or self.cube["blue"][2][2] == "O" or self.cube["blue"][2][2] == "Y") and \
-                (self.cube["orange"][2][0] == "B" or self.cube["orange"][2][0] == "O" or self.cube["orange"][2][0] == "Y") and \
-                    (self.cube["yellow"][2][0] == "B" or self.cube["yellow"][2][0] == "O" or self.cube["yellow"][2][0] == "Y"):
+            elif ((self.cube["blue"][2][2] == "B" or self.cube["blue"][2][2] == "O" or self.cube["blue"][2][2] == "Y") and \
+                (self.cube["orange"][2][2] == "B" or self.cube["orange"][2][2] == "O" or self.cube["orange"][2][2] == "Y") and \
+                    (self.cube["yellow"][0][2] == "B" or self.cube["yellow"][0][2] == "O" or self.cube["yellow"][0][2] == "Y")):
                     while not ((self.cube["green"][0][2] == "G" or self.cube["green"][0][2] == "O" or self.cube["green"][0][2] == "Y") and \
                 (self.cube["orange"][0][2] == "G" or self.cube["orange"][0][2] == "O" or self.cube["orange"][0][2] == "Y") and \
                     (self.cube["yellow"][2][2] == "G" or self.cube["yellow"][2][2] == "O" or self.cube["yellow"][2][2] == "Y")):
@@ -753,6 +753,7 @@ class RubiksCubeSolver:
         self.moveString = ""
         print("------------------------------yellow edges------------------------------")
         self.solve_yellow_corners()
+        
         print(self.moveString)
         
 
@@ -1000,34 +1001,34 @@ def setup_main_program():
 
     cube = {
         'white': [
-            ["B", "Y", "G"],
-            ["B", "W", "R"],
-            ["R", "G", "G"]
+            ["W", "Y", "G"],
+            ["Y", "W", "B"],
+            ["W", "R", "B"]
         ],
         'red': [
-            ["R", "B", "W"],
-            ["W", "R", "R"],
-            ["B", "R", "B"]
+            ["Y", "O", "B"],
+            ["R", "R", "B"],
+            ["B", "O", "G"]
         ],
         'blue': [
-            ["W", "R", "O"],
+            ["R", "G", "O"],
             ["Y", "B", "G"],
-            ["Y", "W", "Y"]
+            ["Y", "G", "O"]
         ],
         'green': [
-            ["W", "W", "O"],
-            ["Y", "G", "B"],
-            ["O", "O", "R"]
+            ["G", "G", "O"],
+            ["W", "G", "B"],
+            ["R", "R", "R"]
         ],
         'yellow': [
-            ["R", "B", "O"],
-            ["O", "Y", "Y"],
-            ["G", "G", "W"]
+            ["R", "O", "G"],
+            ["B", "Y", "W"],
+            ["O", "W", "Y"]
         ],
         'orange': [
-            ["Y", "O", "G"],
-            ["W", "O", "G"],
-            ["Y", "O", "B"]
+            ["Y", "O", "B"],
+            ["W", "O", "R"],
+            ["W", "Y", "W"]
         ]
     }
 
