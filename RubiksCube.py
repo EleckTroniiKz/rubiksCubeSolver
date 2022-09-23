@@ -1,30 +1,5 @@
-import enum
-import random
-import time
 import tkinter as tk
 from mover import Movemaker
-import sys
-
-"""
-dict = {
-    white: [
-        [],[],[]
-    ],
-    ...
-}
-"""
-
-class Faces:
-    def __init__(self, color, tiles):
-        self.color = color
-        self.tiles = tiles
-        
-    
-    def get_color(self):
-        return self.color
-    
-    def get_tiles(self):
-        return self.tiles
 
 class RubiksCubeSolver:
     def __init__(self, mover, cube):
@@ -35,7 +10,8 @@ class RubiksCubeSolver:
         self.startTime = None
         self.endTime = None
     
-    def get_cross_phase(self):
+    def get_cross_phase(self) -> int:
+        """ returns Integer according to current CrossPhase """
         
         if self.cube["yellow"][0][1] == self.cube["yellow"][2][1] == self.cube["yellow"][1][0] == self.cube["yellow"][1][2] == "Y":
             return 3
@@ -46,15 +22,12 @@ class RubiksCubeSolver:
         else:
             return 0
 
-    def create_yellow_cross(self):
+    def create_yellow_cross(self) -> None:
+        """ permute the current cube to the state, where a yellow cross has formed """ 
         hasCross = False
-        """
-        phase 0 : only center yellow
-        phase 1 : yellow L
-        phase 2 : yellow Line
-        phase 3 : yellow Cross 
-        """
+        
         while not hasCross:
+            # get crossphase of yellow side
             currentPhase = self.get_cross_phase()
             if currentPhase == 0:
                 if self.cube["yellow"][0][1] == self.cube["yellow"][1][2] == "Y":
@@ -79,31 +52,17 @@ class RubiksCubeSolver:
                 hasCross = True
                 # yellow cross has been created at this point
                 return
-
-    def orientate_top_edges(self):
-        # move edges so one is correct
-        # do algorithm
-        while not self.cube["red"][1][0] == "R":
-            self.cube = self.mover.make_back(self.cube)
-        if self.cube["blue"][2][1] == "O" and self.cube["orange"][1][2] == "B":
-            self.cube = self.execute_edge_change(self.cube, "ol")
-        elif self.cube["blue"][2][1] == "O" and self.cube["orange"][1][2] == "G":
-            self.cube = self.execute_edge_change(self.cube, "tl")
-            # erst orange mit grün vertauschen dann orange mit blau
-        elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "B":
-            self.cube = self.execute_edge_change(self.cube, "ol")
-            # orange noch mit grün tauschen
-        elif self.cube["blue"][2][1] == "G" and self.cube["orange"][1][2] == "O":
-            # erst blau orange switch, dann porrange grün switch, dann blau orange switch
-            pass
                 
-    def check_white_cross(self):
+    def check_white_cross(self) -> bool:
+        """ true, if white cross is present on white layer """
         return (self.cube["white"][0][1] == self.cube["white"][1][0] == self.cube["white"][1][2] == self.cube["white"][2][1] == "W")
 
-    def check_side(self, side):
+    def check_side(self, side: str) -> bool:
+        """ controls if a given side, is solved or not """
         return (self.cube[side][0][0] == self.cube[side][0][1] == self.cube[side][0][2] == self.cube[side][1][0] == self.cube[side][1][2] == self.cube[side][2][0] == self.cube[side][2][1] == self.cube[side][2][2] )
 
-    def execute_moves(self, move_list):
+    def execute_moves(self, move_list: list) -> None:
+        """ executes and adds moves from move_list to move String """
         if len(move_list) == 1:
             self.cube = self.executeMove(move_list[0])
             self.moveString += " " + move_list[0] + " "
@@ -112,7 +71,8 @@ class RubiksCubeSolver:
                 self.cube = self.executeMove(move)
                 self.moveString += " " + move + " "
 
-    def front_moves_handler(self, front_moves):
+    def front_moves_handler(self, front_moves: int) -> None:
+        """ sorts amount of front_moves to reverse done moves. """
         if front_moves == 1:
             self.execute_moves(["f"])
         elif front_moves == 2:
@@ -120,18 +80,149 @@ class RubiksCubeSolver:
         elif front_moves == 3:
             self.execute_moves(["F"])
 
-    def move_executor(self):
-        moves = self.moveString.strip().split(" ")
-        moves = list(filter(None, moves))
-        
-        for move in moves:
-            if move == "2D" or move == "2F" or move == "2R" or move == "2B" or move == "2L" or move == "2U":
-                self.execute_moves([move[1], move[1]])
-            else:
-                self.execute_moves([move]) 
+    def orientate_white_edges(self) -> None:
+        # blue edge is correct but orange edge is wrong
+        if (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            self.execute_moves(["2R", "B", "2U", "b", "2R"])
+        # blue is not oriented but orange is oriented
+        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            self.execute_moves(["2U", "2B", "2D", "2B", "2U"])
+        # blue is not oriented and orange is not oriented
+        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
+            if self.cube["blue"][0][1] == "G":
+                # green has blue
+                if self.cube["orange"][1][0] == "O":
+                    self.execute_moves(["2D", "2U", "2B", "2U", "2B", "2D"])
+                # all 3 wrong
+                elif self.cube["orange"][1][0] == "B":
+                    self.execute_moves(["2D", "2B", "2U", "b" ,"2R", "b", "2D"])
+            elif self.cube["blue"][0][1] == "O":
+                if self.cube["orange"][1][0] == "B":
+                    self.execute_moves(["2D", "B", "2R", "b", "2D"])
+                elif self.cube["orange"][1][0] == "G":
+                    self.execute_moves(["f", "2D", "b", "2L", "B", "2D"])
 
-    def solve_white_cross(self):
-        #solve white edges
+    def solve_white_corners(self) -> None:     
+        # solve white corners  
+        while not self.check_side("white")    :
+            #checking every corner
+            if self.cube["red"][2][2] == "W":
+                self.execute_moves(["L", "B", "l", "b", "L", "B", "l"])
+            elif self.cube["red"][0][2] == "W":
+                self.execute_moves(["l", "b", "L", "B", "l", "b", "L"])
+            elif self.cube["red"][0][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+
+                self.execute_moves(["l", "b", "L"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["red"][2][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                self.execute_moves(["b", "d", "B", "D"])
+                self.front_moves_handler(frontMoves)         
+            elif self.cube["blue"][0][0] == "W":
+                while not self.cube["white"][2][0] == "W":
+                    self.execute_moves(["L", "B", "l", "b"])
+            elif self.cube["blue"][0][2] == "W":
+                while not self.cube["white"][2][2] == "W":
+                    self.execute_moves(["r", "b", "R", "B"])
+            elif self.cube["blue"][2][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                self.execute_moves(["B", "L", "b", "l"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["blue"][2][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                while not self.cube["white"][2][2] == "W":
+                    self.execute_moves(["b", "r", "B", "R"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["orange"][0][0] == "W":
+                while not self.cube["white"][0][2] == "W":
+                    self.execute_moves(["R", "B", "r", "b"])
+            elif self.cube["orange"][2][0] == "W":
+                self.execute_moves(["r", "b", "R", "B", "r", "b", "R"])
+            elif self.cube["orange"][0][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                self.execute_moves(["R", "B", "r"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["orange"][2][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                self.execute_moves(["r", "b", "R"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["green"][2][0] == "W":
+                self.execute_moves(["U", "B", "u", "b", "U", "B", "u"])
+            elif self.cube["green"][2][2] == "W":
+                self.execute_moves(["u", "b", "U", "B", "u", "b", "U"])
+            elif self.cube["green"][0][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                self.execute_moves(["U", "B", "u"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["green"][0][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                self.execute_moves(["u", "b", "U"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["yellow"][0][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                while not self.cube["white"][2][0] == "W":
+                    self.execute_moves(["L", "B", "l", "b"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["yellow"][0][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][2][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                while not self.cube["white"][2][2] == "W":
+                    self.execute_moves(["r", "b", "R", "B"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["yellow"][2][0] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][0] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                while not self.cube["white"][0][0] == "W":
+                    self.execute_moves(["l", "b", "L", "B"])
+                self.front_moves_handler(frontMoves)
+            elif self.cube["yellow"][2][2] == "W":
+                frontMoves = 0
+                while self.cube["white"][0][2] == "W":
+                    self.execute_moves(["F"])
+                    frontMoves += 1
+                
+                while not self.cube["white"][0][2] == "W":
+                    self.execute_moves(["R", "B", "r", "b"])
+                self.front_moves_handler(frontMoves)   
+
+    def solve_to_white_cross(self) -> None:
         colors = ["blue", "red", "green", "yellow", "orange"]
         white_has_cross = self.check_white_cross()
         index = 0
@@ -313,154 +404,8 @@ class RubiksCubeSolver:
             white_has_cross = self.check_white_cross()
             if white_has_cross:
                 break
-
-        #orientate white edges
-        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
-            self.execute_moves(["F"])
         
-        # blue edge is correct but orange edge is wrong
-        if (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
-            self.execute_moves(["2R", "B", "2U", "b", "2R"])
-        # blue is not oriented but orange is oriented
-        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
-            self.execute_moves(["2U", "2B", "2D", "2B", "2U"])
-        # blue is not oriented and orange is not oriented
-        elif not (self.cube["blue"][0][1] == "B" and self.cube["white"][2][1] == "W") and not (self.cube["orange"][1][0] == "O" and self.cube["white"][1][2] == "W"):
-            if self.cube["blue"][0][1] == "G":
-                # green has blue
-                if self.cube["orange"][1][0] == "O":
-                    self.execute_moves(["2D", "2U", "2B", "2U", "2B", "2D"])
-                # all 3 wrong
-                elif self.cube["orange"][1][0] == "B":
-                    self.execute_moves(["2D", "2B", "2U", "b" ,"2R", "b", "2D"])
-            elif self.cube["blue"][0][1] == "O":
-                if self.cube["orange"][1][0] == "B":
-                    self.execute_moves(["2D", "B", "2R", "b", "2D"])
-                elif self.cube["orange"][1][0] == "G":
-                    self.execute_moves(["f", "2D", "b", "2L", "B", "2D"])
-        
-        # solve white corners  
-        while not self.check_side("white")    :
-            #checking every corner
-            if self.cube["red"][2][2] == "W":
-                self.execute_moves(["L", "B", "l", "b", "L", "B", "l"])
-            elif self.cube["red"][0][2] == "W":
-                self.execute_moves(["l", "b", "L", "B", "l", "b", "L"])
-            elif self.cube["red"][0][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-
-                self.execute_moves(["l", "b", "L"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["red"][2][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                self.execute_moves(["b", "d", "B", "D"])
-                self.front_moves_handler(frontMoves)         
-            elif self.cube["blue"][0][0] == "W":
-                while not self.cube["white"][2][0] == "W":
-                    self.execute_moves(["L", "B", "l", "b"])
-            elif self.cube["blue"][0][2] == "W":
-                while not self.cube["white"][2][2] == "W":
-                    self.execute_moves(["r", "b", "R", "B"])
-            elif self.cube["blue"][2][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                self.execute_moves(["B", "L", "b", "l"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["blue"][2][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                while not self.cube["white"][2][2] == "W":
-                    self.execute_moves(["b", "r", "B", "R"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["orange"][0][0] == "W":
-                while not self.cube["white"][0][2] == "W":
-                    self.execute_moves(["R", "B", "r", "b"])
-            elif self.cube["orange"][2][0] == "W":
-                self.execute_moves(["r", "b", "R", "B", "r", "b", "R"])
-            elif self.cube["orange"][0][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                self.execute_moves(["R", "B", "r"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["orange"][2][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                self.execute_moves(["r", "b", "R"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["green"][2][0] == "W":
-                self.execute_moves(["U", "B", "u", "b", "U", "B", "u"])
-            elif self.cube["green"][2][2] == "W":
-                self.execute_moves(["u", "b", "U", "B", "u", "b", "U"])
-            elif self.cube["green"][0][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                self.execute_moves(["U", "B", "u"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["green"][0][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                self.execute_moves(["u", "b", "U"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["yellow"][0][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                while not self.cube["white"][2][0] == "W":
-                    self.execute_moves(["L", "B", "l", "b"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["yellow"][0][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][2][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                while not self.cube["white"][2][2] == "W":
-                    self.execute_moves(["r", "b", "R", "B"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["yellow"][2][0] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][0] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                while not self.cube["white"][0][0] == "W":
-                    self.execute_moves(["l", "b", "L", "B"])
-                self.front_moves_handler(frontMoves)
-            elif self.cube["yellow"][2][2] == "W":
-                frontMoves = 0
-                while self.cube["white"][0][2] == "W":
-                    self.execute_moves(["F"])
-                    frontMoves += 1
-                
-                while not self.cube["white"][0][2] == "W":
-                    self.execute_moves(["R", "B", "r", "b"])
-                self.front_moves_handler(frontMoves)
-        
-        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
-            self.execute_moves(["F"])
-        #orient white corners
+    def orientate_white_corners(self) -> None:
         while not (self.cube["red"][0][2] == "R" and self.cube["green"][2][0] == "G"):
             if self.cube["red"][0][2] == "G" and self.cube["green"][2][0] == "O":
                 self.execute_moves(["l", "b", "L", "R", "B", "r", "l", "b", "L"])
@@ -491,15 +436,35 @@ class RubiksCubeSolver:
                 self.execute_moves(["R", "B", "r", "b", "D", "b", "d", "B", "R", "B", "r"])
             elif self.cube["green"][2][2] == "B" and self.cube["orange"][0][0] == "R":
                 self.execute_moves(["R", "B", "r", "B", "d", "b", "D", "b", "R", "B", "r"])
+
+    def solve_white_side(self) -> None:
+        """ permutes the current cube in a way, so that the white side is solved """
+        #solve white edges
+        self.solve_to_white_cross()
+
+        #orientate white edges
+        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
+            self.execute_moves(["F"])
         
-    def get_cube(self):
+        self.orientate_white_edges()
+        self.solve_white_corners()
+        
+        while not (self.cube["red"][1][2] == "R" and self.cube["white"][1][0] == "W"):
+            self.execute_moves(["F"])
+        #orient white corners
+        self.orientate_white_corners()
+        
+    def get_cube(self) -> dict:
+        """ return current cube"""
         return self.cube
 
-    def finished_second_layer(self):
+    def finished_second_layer(self) -> bool:
+        """ check if the seconmd layer has been solved correctly """
         return ((self.cube["red"][1][0] == "Y" or self.cube["yellow"][1][0] == "Y") and (self.cube["blue"][2][1] == "Y" or self.cube["yellow"][0][1] == "Y") and (self.cube["green"][0][1] == "Y" or self.cube["yellow"][2][1] == "Y") and (self.cube["orange"][1][2] == "Y" or self.cube["yellow"][1][2] == "Y")) \
             and ((self.cube["red"][0][1] == "R" and self.cube["green"][1][0] == "G") and (self.cube["red"][2][1] == "R" or self.cube["blue"][1][0] == "B") and (self.cube["blue"][1][2] == "B" and self.cube["orange"][2][1] == "O") and (self.cube["orange"][0][1] == "O" and self.cube["green"][1][2] == "G")) 
 
-    def solve_second_layer(self):
+    def solve_second_layer(self) -> None:
+        """ permute the cube, so that the second layer of the cube is solved """
         red_green_edge, red_blue_edge, orange_green_edge, orange_blue_edge = False, False, False, False
         old_correct = 0
         current_correct = 0
@@ -669,7 +634,9 @@ class RubiksCubeSolver:
             else:
                 self.execute_moves(["B"])
             
-    def solve_yellow_edges(self):
+    def solve_yellow_edges(self) -> None:
+        """ executes moves to solve yellow edges """
+
         while not self.cube["red"][1][0] == "R":
             self.execute_moves(["B"])
         
@@ -684,7 +651,8 @@ class RubiksCubeSolver:
         elif self.cube["blue"][2][1] == "O" and self.cube["orange"][1][2] == "G":
             self.execute_moves(["D", "B", "d" ,"B" ,"D" ,"2B" ,"d" ,"B", "L", "B", "l", "B", "L", "B", "B", "l", "B"])
 
-    def solve_yellow_corners(self):
+    def solve_yellow_corners(self) -> None:
+        """ permutes the current cube, so that yellow corners are solved """
         red_blue = False
         red_green = False
         orange_blue = False
@@ -731,8 +699,8 @@ class RubiksCubeSolver:
                 self.execute_moves(["r", "f", "R", "F"])
             self.execute_moves(["b"])
 
-    def start_solve(self):
-        self.solve_white_cross()
+    def start_solve(self) -> None:
+        self.solve_white_side()
         
         print(self.moveString)
         self.moveString = ""
@@ -758,58 +726,9 @@ class RubiksCubeSolver:
         self.solve_yellow_corners()
         
         print(self.moveString)
-        
-
-    def startTimer(self):
-        self.startTime = time.time()
-
-    def calculate_solving_time(self):
-        """
-        returns the needed time as a tuple (hours, minutes, seconds)
-        """
-        timeDifference = self.endTime - self.startTime #i guess the time will be gottin seconds.
-
-        if timeDifference >= 60:
-            multiplicated = 0
-            while 60 * multiplicated <= timeDifference:
-                multiplicated += 1
-            timeDifference -= (multiplicated * 60)
-            if multiplicated >= 60:
-                hours = multiplicated // 60
-                multiplicated -= hours * 60
-                return (hours, multiplicated, timeDifference)
-            else:
-                return (0, multiplicated, timeDifference)
-        else:
-            return (0, 0, timeDifference)
-
-    def endTimer(self):
-        self.endTime = time.time()
-        self.calculate_solving_time()
-
-    def get_solve_time(self):
-        return self.endTime - self.startTime
-
-    def get_scramble(self, length=20):
-        random_moves = []
-        lastMadeMove = ""
-        while len(random_moves) < length:
-            random_number = random.randint(0, len(self.moves)-1)
-            if lastMadeMove.capitalize() == self.moves[random_number].capitalize():
-                continue
-            else:
-                lastMadeMove = self.moves[random_number][0]
-                random_moves.append(lastMadeMove)
-          
-    def set_scramble(self, white, red, blue, yellow, green, orange):
-        self.white(white)
-        self.red(red)
-        self.blue(blue)
-        self.yellow(yellow)
-        self.green(green)
-        self.orange(orange)
     
-    def executeMove(self, move):
+    def executeMove(self, move: str) -> None:
+        """ sort MoveString to according method call """
         if move == "R":
             return self.mover.make_right(self.cube)
         elif move == "r":
@@ -847,19 +766,13 @@ class RubiksCubeSolver:
         elif move == "2F":
             return self.mover.make_front(self.mover.make_front(self.cube))
     
-    def is_edge_piece(self, indices):
+    def is_edge_piece(self, indices: tuple) -> bool:
         """
             checks if the index of the current piece indicates if its an edge piece or not
         """
         return ((indices[0] == 0 or indices[0] == 2) and indices[1] == 1) or (indices[0] == 1 and (indices[1] == 0 or indices[1] == 2))
 
-    def is_center(self, indices):
-        """
-        checks if the provided indices belong to a center piece
-        """
-        return indices[0] == 1 and indices[0] == 1
-
-    def has_white_in_face(self, face):
+    def has_white_in_face(self, face: list) -> list:
         """
             checks if an element in this list is a white piece
         """
@@ -880,6 +793,7 @@ class UserInterface:
         self.color_cycle = ['G', 'W', 'R', 'O', 'B', 'Y']
 
     def create_move_buttons(self):
+        """ Initializes Buttons for permuting the cube """
         self.L_button = tk.Button(self.root, text="  L  ", command=lambda: self.moveButtonHandler('L'))
         self.L_button.place(x=25, y=450)
         self.l_button = tk.Button(self.root, text="  l  ", command=lambda: self.moveButtonHandler('l'))
@@ -915,15 +829,17 @@ class UserInterface:
         pass
 
     def solveCube(self):
+        """ calls solve function from RubiksCubeSolver """
         solver = RubiksCubeSolver(self.mover, self.cube)
         solver.start_solve()
         self.print_cube(solver.get_cube())
         
-
     def get_color(self, color):
+        """ gets color string according to given Characters (W, R, B, G, Y, O) """
         return 'white' if color == "W" else 'red' if color == "R" else 'blue' if color == "B" else 'yellow' if color == "Y" else 'green' if color == "G" else 'orange'
 
     def changeColor(self, currentColor, currentSide, x, y):
+        """ changes color of tiles on click, according to pre-defined cycle """
         currentIndex = self.color_cycle.index(currentColor)
         nextIndex = currentIndex+1
         if nextIndex == len(self.color_cycle):
@@ -931,8 +847,8 @@ class UserInterface:
         self.cube[currentSide][x][y] = self.color_cycle[nextIndex]
         self.print_cube(self.cube)
         
-
     def print_cube(self, cube):
+        """ calls prints every cube side on User Interface with Positional Arguments for the UI """
         self.print_face(cube["green"], 47, 0, "green")
         self.print_face(cube["red"], 0, 75, "red")
         self.print_face(cube["white"], 47, 75, "white")
@@ -941,6 +857,7 @@ class UserInterface:
         self.print_face(cube["yellow"], 47, 225, "yellow")
 
     def print_face(self, colors, gridX, gridY, side):
+        """ prints face (UI) according to given color and position data """
         tL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]), command=lambda: self.changeColor(colors[0][0], side, 0, 0))
         tL.place(x=gridX, y=gridY)
 
@@ -969,76 +886,38 @@ class UserInterface:
         bR.place(x=gridX+30, y=gridY+50)
         
     def moveButtonHandler(self, move):
+        """ handler for permutation buttons """
         self.cube = self.mover.sort_move(move, self.cube)
         self.print_cube(self.cube)
-        
-def setupTesterInConsole():
-    white = [["W" for row in range(3)] for line in range(3)]
-    red = [["R" for row in range(3)] for line in range(3)]
-    blue = [["B" for row in range(3)] for line in range(3)]
-    green = [["G" for row in range(3)] for line in range(3)]
-    yellow = [["Y" for row in range(3)] for line in range(3)]
-    orange = [["O" for row in range(3)] for line in range(3)]
 
-    cube = {
-                'white': white,
-                'red': red,
-                'blue': blue,
-                'green': green,
-                'yellow': yellow,
-                'orange': orange
-            }
-
-    tester = Tester()
-
-    tester.test_Transformation('R', cube)
-
-def setup_main_program():
-
-    white = [["W" for row in range(3)] for line in range(3)]
-    red = [["R" for row in range(3)] for line in range(3)]
-    blue = [["B" for row in range(3)] for line in range(3)]
-    green = [["G" for row in range(3)] for line in range(3)]
-    yellow = [["Y" for row in range(3)] for line in range(3)]
-    orange = [["O" for row in range(3)] for line in range(3)]
-
+def main():
+    """ Initializes needed Elements for the Project """
     cube = {
         'white': [
-            ["O", "O", "G"],
-            ["B", "W", "G"],
-            ["Y", "R", "W"]
+            ["W" for row in range(3)] for line in range(3)
         ],
         'red': [
-            ["B", "W", "G"],
-            ["G", "R", "O"],
-            ["Y", "R", "R"]
+            ["R" for row in range(3)] for line in range(3)
         ],
         'blue': [
-            ["G", "B", "G"],
-            ["Y", "B", "Y"],
-            ["R", "B", "O"]
+            ["B" for row in range(3)] for line in range(3)
         ],
         'green': [
-            ["Y", "W", "R"],
-            ["G", "G", "B"],
-            ["Y", "W", "O"]
+           ["G" for row in range(3)] for line in range(3)
         ],
         'yellow': [
-            ["B", "Y", "W"],
-            ["O", "Y", "R"],
-            ["O", "R", "W"]
+            ["Y" for row in range(3)] for line in range(3)
         ],
         'orange': [
-            ["W", "W", "B"],
-            ["Y", "O", "G"],
-            ["R", "O", "B"]
+            ["O" for row in range(3)] for line in range(3)
         ]
     }
 
     root = tk.Tk()
     root.geometry('600x600')
     interface = UserInterface(root, Movemaker(), cube)
-
     root.mainloop()
 
-setup_main_program()
+if __name__ == "__main__":
+    main()
+
