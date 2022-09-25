@@ -3,7 +3,7 @@ class Movemaker:
         self.lastMove = 0
 
     def sort_move(self, moveLetter, cube):
-
+        """ sorts letters to moves on cube """
         if moveLetter == "R":
             return self.make_right(cube)
         elif moveLetter == "r":
@@ -30,6 +30,7 @@ class Movemaker:
             return self.make_up(cube, inverted = True)
 
     def twist(self, currentSide, inverted = False):
+        """ twist a given side of the cube """
         TopLeft, TopRight, BottomLeft, BottomRight = currentSide[0][0], currentSide[0][2], currentSide[2][0], currentSide[2][2]
         TopMid, MidLeft, MidRight, BottomMid = currentSide[0][1], currentSide[1][0], currentSide[1][2], currentSide[2][1]
         if not inverted:
@@ -53,7 +54,7 @@ class Movemaker:
         return currentSide
 
     def make_left(self, cube, inverted = False):
-        #transform the cube as if a left move was made
+        """transform the cube as if a left move was made"""
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][1][0], cube["white"][2][0]
             cube["white"][0][0], cube["white"][1][0], cube["white"][2][0] = cube["green"][0][0], cube["green"][1][0], cube["green"][2][0]
@@ -79,7 +80,7 @@ class Movemaker:
         return cube
 
     def make_right(self, cube, inverted = False):
-        #transform the cube as if a right move was made
+        """transform the cube as if a right move was made"""
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][0][2], cube["white"][1][2], cube["white"][2][2]
             cube["white"][0][2], cube["white"][1][2], cube["white"][2][2] = cube["blue"][0][2], cube["blue"][1][2], cube["blue"][2][2]
@@ -105,7 +106,7 @@ class Movemaker:
         return cube
 
     def make_up(self, cube, inverted = False):
-        #transform the cube as if a upper move was made
+        """transform the cube as if a upper move was made"""
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][0][0], cube["white"][0][1], cube["white"][0][2]
             cube["white"][0][0], cube["white"][0][1], cube["white"][0][2] = cube["orange"][0][0], cube["orange"][0][1], cube["orange"][0][2]
@@ -131,7 +132,7 @@ class Movemaker:
         return cube
 
     def make_down(self, cube, inverted = False):
-        #transform the cube as if a down move was made
+        """transform the cube as if a down move was made"""
         if not inverted:
             whiteA, whiteB, whiteC = cube["white"][2][0], cube["white"][2][1], cube["white"][2][2]
             cube["white"][2][0], cube["white"][2][1], cube["white"][2][2] = cube["red"][2][0], cube["red"][2][1], cube["red"][2][2]
@@ -158,7 +159,7 @@ class Movemaker:
         return cube
 
     def make_back(self, cube, inverted = False):
-        #transform the cube as if a back move was made
+        """transform the cube as if a back move was made"""
         if not inverted:
             greenA, greenB, greenC = cube["green"][0][0], cube["green"][0][1], cube["green"][0][2]
             cube["green"][0][0], cube["green"][0][1], cube["green"][0][2] = cube["orange"][0][2], cube["orange"][1][2], cube["orange"][2][2]
@@ -185,7 +186,7 @@ class Movemaker:
         return cube
 
     def make_front(self, cube, inverted = False):
-        #transform the cube as if a front move was made
+        """transform the cube as if a front move was made"""
         if not inverted:
             greenA, greenB, greenC = cube["green"][2][0], cube["green"][2][1], cube["green"][2][2]
             cube["green"][2][0], cube["green"][2][1], cube["green"][2][2] = cube["red"][2][2], cube["red"][1][2], cube["red"][0][2]

@@ -35,6 +35,7 @@ class RubiksHelper:
             else:
                 lastMadeMove = self.moves[random_number][0]
                 random_moves.append(lastMadeMove)
+        return random_moves
 
     def is_edge_piece(self, indices):
         """ returns true, if indices belong to an edge piece """

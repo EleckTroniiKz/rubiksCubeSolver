@@ -1,5 +1,6 @@
 import tkinter as tk
 from mover import Movemaker
+from helper import RubiksHelper
 
 class RubiksCubeSolver:
     def __init__(self, mover, cube):
@@ -864,9 +865,11 @@ class RubiksCubeSolver:
             self.execute_moves(["b"])
 
     def get_solve_strings(self) -> list:
+        """ receive a list of move strings """
         return [self.movesToSolveWhiteFace, self.movesToSolveSecondLayer, self.movesToSolveYellowCross, self.movesToSolveYellowEdges, self.movesToSolveYellowCorners, self.moveString]
 
     def start_solve(self) -> None:
+        """ call needed functions to simulate the process of solving the cube """
         self.solve_white_side()
         self.movesToSolveWhiteFace = self.moveString
         self.moveString = ""
@@ -963,56 +966,88 @@ class UserInterface:
         self.root = root
         self.mover = mover
         self.cube = cube
+        self.current_scramble = ""
         self.permutation = ""
         self.create_move_buttons()    
         self.print_cube(self.cube)
         self.color_cycle = ['G', 'W', 'R', 'O', 'B', 'Y']
 
+    def generate_scramble(self):
+        """ calls scramble generation form helper and shows it """
+        helper = RubiksHelper()
+        move_list = helper.get_scramble()
+        temp = RubiksCubeSolver(self.mover, self.cube)
+        for move in move_list:
+            self.current_scramble += move + " "
+        self.current_scramble += "\n"
+        temp.execute_moves(move_list)
+        self.cube = temp.get_cube()
+        self.print_cube(self.cube)
+
+    def show_scramble_win(self):
+        win = tk.Toplevel(self.root)
+        tk.Label(win, text=self.current_scramble).pack(padx=30, pady=30)
+
     def create_move_buttons(self):
         """ Initializes Buttons for permuting the cube """
+        # Left
         self.L_button = tk.Button(self.root, text="  L  ", command=lambda: self.moveButtonHandler('L'))
         self.L_button.place(x=25, y=450)
+        # Left Prime
         self.l_button = tk.Button(self.root, text="  l  ", command=lambda: self.moveButtonHandler('l'))
         self.l_button.place(x=25, y=475)
-
+        # Right
         self.R_button = tk.Button(self.root, text="  R  ", command=lambda: self.moveButtonHandler('R'))
         self.R_button.place(x=60, y=450)
+        # Right Prime
         self.r_button = tk.Button(self.root, text="  r  ", command=lambda: self.moveButtonHandler('r'))
         self.r_button.place(x=60, y=475)
-
+        # Up
         self.U_button = tk.Button(self.root, text="  U  ", command=lambda: self.moveButtonHandler('U'))
         self.U_button.place(x=95, y=450)
+        # Up Prime
         self.u_button = tk.Button(self.root, text="  u  ", command=lambda: self.moveButtonHandler('u'))
         self.u_button.place(x=95, y=475) 
-
+        # Front
         self.F_button = tk.Button(self.root, text="  F  ", command=lambda: self.moveButtonHandler('F'))
         self.F_button.place(x=130, y=450)
+        # Front Prime
         self.f_button = tk.Button(self.root, text="  f  ", command=lambda: self.moveButtonHandler('f'))
         self.f_button.place(x=130, y=475)
-
+        # Down
         self.D_button = tk.Button(self.root, text="  D  ", command=lambda: self.moveButtonHandler('D'))
         self.D_button.place(x=165, y=450)
+        # Down Prime
         self.d_button = tk.Button(self.root, text="  d  ", command=lambda: self.moveButtonHandler('d'))
         self.d_button.place(x=165, y=475)
-
+        # Back
         self.B_button = tk.Button(self.root, text="  B  ", command=lambda: self.moveButtonHandler('B'))
         self.B_button.place(x=200, y=450)
+        # Back Prime
         self.b_button = tk.Button(self.root, text="  b  ", command=lambda: self.moveButtonHandler('b'))
         self.b_button.place(x=200, y=475)
-
+        # Solve Button
         self.solve_button = tk.Button(self.root, text= "Solve", command=lambda: self.solveCube())
         self.solve_button.place(x=60, y= 500)
-        pass
+        # generate mix
+        self.generate_mix = tk.Button(self.root, text= "Generate Scramble", command=lambda: self.generate_scramble())
+        self.generate_mix.place(x = 225, y= 500)
+        # show scramble mix 
+        self.show_scramble = tk.Button(self.root, text = "Show generated scramble", command=lambda: self.show_scramble_win())
+        self.show_scramble.place(x=225, y=550)
 
     def solveCube(self):
         """ calls solve function from RubiksCubeSolver """
         solver = RubiksCubeSolver(self.mover, self.cube)
         solver.start_solve()
-        self.print_cube(solver.get_cube())
+        self.cube = solver.get_cube()
+        self.print_cube(self.cube)
         move_strings = solver.get_solve_strings()
         self.show_solution_popup(move_strings)
+        self.current_scramble = ""
     
     def show_solution_popup(self, moveStrings):
+        """ shows a movement string to solve the cube """
         win = tk.Toplevel(self.root)
         tk.Label(win, text= "Cube-perm: " + self.permutation + 
                             "\n\n" + moveStrings[0] + "\n\n" + 
@@ -1024,7 +1059,6 @@ class UserInterface:
                             moveStrings[3] + "\n\n" + 
                             "Yellow Edges solved\n\n" +
                             moveStrings[4]).pack(padx=30, pady=30)
-
 
     def get_color(self, color):
         """ gets color string according to given Characters (W, R, B, G, Y, O) """
@@ -1050,30 +1084,39 @@ class UserInterface:
 
     def print_face(self, colors, gridX, gridY, side):
         """ prints face (UI) according to given color and position data """
+        # top Left
         tL = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][0]), command=lambda: self.changeColor(colors[0][0], side, 0, 0))
         tL.place(x=gridX, y=gridY)
 
+        # top Mid
         tM = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][1]), command=lambda: self.changeColor(colors[0][1], side, 0, 1))
         tM.place(x=gridX+15, y=gridY)
 
+        # top Right
         tR = tk.Button(self.root, text="  ", bg= self.get_color(colors[0][2]), command=lambda: self.changeColor(colors[0][2], side, 0, 2))
         tR.place(x=gridX+30, y=gridY)
 
+        # mid Left
         mL = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][0]), command=lambda: self.changeColor(colors[1][0], side, 1, 0))
         mL.place(x=gridX, y=gridY+25)
 
+        # mid Mid
         mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][1]))
         mM.place(x=gridX+15, y=gridY+25)
 
+        # mid Right
         mR = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][2]), command=lambda: self.changeColor(colors[1][2], side, 1, 2))
         mR.place(x=gridX+30, y=gridY+25)
 
+        # bottom Left
         bL = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][0]), command=lambda: self.changeColor(colors[2][0], side, 2, 0))
         bL.place(x=gridX, y=gridY+50)
 
+        # bottom Right
         bM = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][1]), command=lambda: self.changeColor(colors[2][1], side, 2, 1))
         bM.place(x=gridX+15, y=gridY+50)
 
+        # bottom Left
         bR = tk.Button(self.root, text="  ", bg= self.get_color(colors[2][2]), command=lambda: self.changeColor(colors[2][2], side, 2, 2))
         bR.place(x=gridX+30, y=gridY+50)
         
