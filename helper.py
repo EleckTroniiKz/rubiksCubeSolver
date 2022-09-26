@@ -42,11 +42,14 @@ class RubiksHelper:
         return ((indices[0] == 0 or indices[0] == 2) and indices[1] == 1) or (indices[0] == 1 and (indices[1] == 0 or indices[1] == 2))
 
     def start_timer(self):
+        # TBD: But this Method should be called, when the user wants to start a timer.
         pass
 
     def end_timer(self):
+        # TBD: But this Method should be called, when the user wnats to end a timer.
         pass
 
     def get_time(self):
+        # TBD: But this calculated the timedifference between start and end
         pass
 
