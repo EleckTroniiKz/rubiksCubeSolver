@@ -1028,13 +1028,16 @@ class UserInterface:
         self.b_button.place(x=200, y=475)
         # Solve Button
         self.solve_button = tk.Button(self.root, text= "Solve", command=lambda: self.solveCube())
-        self.solve_button.place(x=60, y= 500)
+        self.solve_button.place(x=60, y= 525)
         # generate mix
         self.generate_mix = tk.Button(self.root, text= "Generate Scramble", command=lambda: self.generate_scramble())
-        self.generate_mix.place(x = 225, y= 500)
+        self.generate_mix.place(x = 60, y= 560)
         # show scramble mix 
         self.show_scramble = tk.Button(self.root, text = "Show generated scramble", command=lambda: self.show_scramble_win())
-        self.show_scramble.place(x=225, y=550)
+        self.show_scramble.place(x=60, y=590)
+        # add Instruction Label
+        self.instruction_label = tk.Label(self.root, text= "Please keep the white side in the front \n(shows to you) and the green side at the \ntop (points up) at all times!")
+        self.instruction_label.place(x=30, y=380)
 
     def solveCube(self):
         """ calls solve function from RubiksCubeSolver """
@@ -1075,12 +1078,12 @@ class UserInterface:
         
     def print_cube(self, cube):
         """ calls prints every cube side on User Interface with Positional Arguments for the UI """
-        self.print_face(cube["green"], 47, 0, "green")
-        self.print_face(cube["red"], 0, 75, "red")
-        self.print_face(cube["white"], 47, 75, "white")
-        self.print_face(cube["orange"], 94, 75, "orange")
-        self.print_face(cube["blue"], 47, 150, "blue")
-        self.print_face(cube["yellow"], 47, 225, "yellow")
+        self.print_face(cube["green"], 120, 15, "green")
+        self.print_face(cube["red"], 73, 90, "red")
+        self.print_face(cube["white"], 120, 90, "white")
+        self.print_face(cube["orange"], 166, 90, "orange")
+        self.print_face(cube["blue"], 120, 165, "blue")
+        self.print_face(cube["yellow"], 120, 240, "yellow")
 
     def print_face(self, colors, gridX, gridY, side):
         """ prints face (UI) according to given color and position data """
@@ -1101,7 +1104,13 @@ class UserInterface:
         mL.place(x=gridX, y=gridY+25)
 
         # mid Mid
-        mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][1]))
+        if side == "white":
+            mM = tk.Button(self.root, text="F ", bg = self.get_color(colors[1][1]))
+        elif side == "green":
+            mM = tk.Button(self.root, text="T ", bg= self.get_color(colors[1][1]))
+        else:
+            mM = tk.Button(self.root, text="  ", bg= self.get_color(colors[1][1]))
+        
         mM.place(x=gridX+15, y=gridY+25)
 
         # mid Right
@@ -1150,7 +1159,7 @@ def main():
     }
 
     root = tk.Tk()
-    root.geometry('600x600')
+    root.geometry('280x650')
     interface = UserInterface(root, Movemaker(), cube)
     root.mainloop()
 
